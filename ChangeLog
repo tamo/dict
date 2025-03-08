@@ -1,5 +1,9 @@
 2025-03-08  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* Makefile: sed まわりを mac で使えるように調整。
+
+2025-03-08  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	* Makefile: 異体字辞書.UTF-8 を追加。
 	東京大学史料編纂所のデータも使用。
 	ライセンスはCC BY 4.0 であることを確認済み。

@@ -18,6 +18,7 @@ MV	  = mv --force
 RM	  = /bin/rm -f
 RUBY	  = ruby -I $(TOOLS_DIR)/filters
 SED	  = sed
+SED_EUC	  = LC_CTYPE=ja_JP.EUC-JP $(SED)
 SORT	  = skkdic-sort
 TAR	  = tar
 TOUCH	  = touch
@@ -176,11 +177,11 @@ SKK-JISYO.total+zipcode.unannotated: SKK-JISYO.total+zipcode
 
 SKK-JISYO.L.header: SKK-JISYO.L
 	echo ';; (This dictionary was automatically generated from SKK dictionaries)' > SKK-JISYO.L.header
-	$(SED) -n '/^;; okuri-ari entries./q;p' SKK-JISYO.L >> SKK-JISYO.L.header
+	$(SED_EUC) -n '/^;; okuri-ari entries./q;p' SKK-JISYO.L >> SKK-JISYO.L.header
 
 SKK-JISYO.L.header.u8: SKK-JISYO.L.header
 	$(ICONV) -f euc-jp -t utf-8 SKK-JISYO.L.header > SKK-JISYO.L.header.u8
-	$(SED) -i "2s/coding: euc-jp /coding: utf-8 /" SKK-JISYO.L.header.u8
+	$(SED) -ie "2s/coding: euc-jp /coding: utf-8 /" SKK-JISYO.L.header.u8
 %.u8: %
 	$(ICONV) -f euc-jp -t utf-8 $< > $@
 
