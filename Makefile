@@ -2,13 +2,10 @@
 #
 # Maintainer: SKK Development Team <skk@ring.gr.jp>
 
-COUNT	  = skkdic-count
 CURL      = curl
 DATE	  = date
 DENO	  = deno
 EMACS	  = emacs --batch --directory ./
-EXPR	  = skkdic-expr
-EXPR2	  = skkdic-expr2
 GAWK	  = LC_ALL=C gawk
 GREP	  = grep
 GZIP	  = gzip -9
@@ -19,19 +16,24 @@ RM	  = /bin/rm -f
 RUBY	  = ruby -I $(TOOLS_DIR)/filters
 SED	  = sed
 SED_EUC	  = LC_CTYPE=ja_JP.EUC-JP $(SED)
-SORT	  = skkdic-sort
 TAR	  = tar
 TOUCH	  = touch
 UNZIP	  = unzip -o
 
 ZIPDIC_DIR  = ./zipcode
 
+TOOLS_DIR = ../tools
+COUNT	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-count
+EXPR	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-expr
+EXPR2	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-expr2
+SORT	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-sort
+
 DIC2PDB = dic2pdb
 DICCOMPACT = diccompact.rb
 KANADIC2ROMADIC = kanadic2romadic
 NKF = nkf
 SKKDIC2KANADIC = skkdic2kanadic
-TOOLS_DIR = ../tools
+
 
 SRCS	  = SKK-JISYO.L SKK-JISYO.ML SKK-JISYO.M SKK-JISYO.S SKK-JISYO.JIS2 \
 		SKK-JISYO.JIS3_4 SKK-JISYO.pubdic+ SKK-JISYO.wrong.annotated \

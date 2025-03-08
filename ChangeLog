@@ -1,5 +1,9 @@
 2025-03-08  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* Makefile: TOOLS_DIR を PATH に追加。
+
+2025-03-08  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	* Makefile: sed まわりを mac で使えるように調整。
 
 2025-03-08  Tamotsu Takahashi  <ttakah+github@gmail.com>
