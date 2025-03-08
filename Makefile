@@ -36,7 +36,7 @@ SRCS	  = SKK-JISYO.L SKK-JISYO.ML SKK-JISYO.M SKK-JISYO.S SKK-JISYO.JIS2 \
 		SKK-JISYO.JIS3_4 SKK-JISYO.pubdic+ SKK-JISYO.wrong.annotated \
 		SKK-JISYO.okinawa SKK-JISYO.geo SKK-JISYO.jinmei SKK-JISYO.law \
 		SKK-JISYO.mazegaki SKK-JISYO.assoc SKK-JISYO.itaiji \
-		SKK-JISYO.itaiji.JIS3_4 SKK-JISYO.china_taiwan \
+		SKK-JISYO.itaiji.JIS3_4 SKK-JISYO.itaiji.UTF-8 SKK-JISYO.china_taiwan \
 		SKK-JISYO.propernoun SKK-JISYO.station SKK-JISYO.requested \
 		SKK-JISYO.fullname SKK-JISYO.JIS2004 SKK-JISYO.lisp
 
@@ -44,7 +44,7 @@ SRCS	  = SKK-JISYO.L SKK-JISYO.ML SKK-JISYO.M SKK-JISYO.S SKK-JISYO.JIS2 \
 
 # JSON から生成
 EUC_SRCS = SKK-JISYO.assoc SKK-JISYO.china_taiwan SKK-JISYO.edict SKK-JISYO.geo SKK-JISYO.hukugougo SKK-JISYO.itaiji SKK-JISYO.jinmei SKK-JISYO.JIS2 SKK-JISYO.law SKK-JISYO.L SKK-JISYO.mazegaki SKK-JISYO.M SKK-JISYO.ML SKK-JISYO.okinawa SKK-JISYO.propernoun SKK-JISYO.pubdic+ SKK-JISYO.S SKK-JISYO.station
-UTF_SRCS = SKK-JISYO.edict2 SKK-JISYO.emoji SKK-JISYO.fullname SKK-JISYO.pinyin
+UTF_SRCS = SKK-JISYO.edict2 SKK-JISYO.emoji SKK-JISYO.fullname SKK-JISYO.itaiji.UTF-8 SKK-JISYO.pinyin
 SKK-JISYO.%: json/SKK-JISYO.%.json meta/SKK-JISYO.%.yaml
 	if [ "x$(filter $@,$(EUC_SRCS))" = "x$@" ]; then \
 		$(DENO) run --allow-read --allow-write --allow-net script/json2txt.ts \
@@ -68,6 +68,7 @@ clean:
 	*.unannotated SKK-JISYO.wrong PBinlineDB.pdb *.tmp *.u8 *.w PBinlineDB.dic *.taciturn \
 	SKK-JISYO.L+ SKK-JISYO.total SKK-JISYO.total+zipcode SKK-JISYO.L.header SKK-JISYO.china_taiwan \
 	SKK-JISYO.emoji.en SKK-JISYO.emoji.ja en.xml ja.xml \
+	itaiji_list.* variant0213.* jisx0213misc.zip \
 	emoji-list.txt $(EUC_SRCS) $(UTF_SRCS)
 
 archive: gzip
@@ -272,6 +273,31 @@ IVD_Sequences.txt:
 
 IVD_Collections.txt:
 	test -f IVD_Collections.txt || $(CURL) -o IVD_Collections.txt https://unicode.org/ivd/data/$(IVD_VER)/IVD_Collections.txt
+
+
+SKK-JISYO.itaiji.UTF-8: SKK-JISYO.itaiji.UTF-8.header SKK-JISYO.itaiji.u8 itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213misc.zip
+	$(EXPR2) SKK-JISYO.itaiji.u8 + itaiji_list.skk + variant0213.txt.skk | cat SKK-JISYO.itaiji.UTF-8.header - > SKK-JISYO.itaiji.UTF-8
+
+# 史料編纂所データベース異体字同定一覧（東京大学史料編纂所編）
+SHIPS_URL = https://wwwap.hi.u-tokyo.ac.jp/ships/itaiji_list.jsp
+
+itaiji_list.skk: itaiji_list.html
+	./script/itaiji_list.sh < itaiji_list.html > itaiji_list.skk
+
+itaiji_list.html:
+	$(CURL) -o itaiji_list.html $(SHIPS_URL)
+
+# JISX0213 InfoCenter
+JISX_URL = https://www.jca.apc.org/~earthian/aozora/0213/misc0c23.zip
+
+variant0213.txt.skk: variant0213.txt
+	$(ICONV) -f shift_jisx0213 -t utf-8 variant0213.txt | sed -ne 's/),/\//g;s/^[0-9-]*,(\(.\)/\1 /;s/[0-9-]*,(//gp' > variant0213.txt.skk
+
+variant0213.txt: jisx0213misc.zip
+	$(UNZIP) -p jisx0213misc.zip "variant0213.txt" > variant0213.txt
+
+jisx0213misc.zip:
+	$(CURL) -o jisx0213misc.zip $(JISX_URL)
 
 # json/%.json が % に依存すると循環するので注意
 EUC_JSON = $(patsubst %,json/%.json,$(EUC_SRCS))

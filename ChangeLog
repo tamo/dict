@@ -1,3 +1,14 @@
+2025-03-08  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
+	* Makefile: 異体字辞書.UTF-8 を追加。
+	東京大学史料編纂所のデータも使用。
+	ライセンスはCC BY 4.0 であることを確認済み。
+	* SKK-JISYO.itaiji.UTF-8, SKK-JISYO.itaiji.UTF-8.header,
+	json/SKK-JISYO.itaiji.UTF-8.json,
+	meta/SKK-JISYO.itaiji.UTF-8.yaml: 新規。
+	* script/itaiji_list.sh: 新規。Public domain
+	* committers.md: 更新。
+
 2024-08-28  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
 	* script/edict2.ts: 新規。
