@@ -1,3 +1,8 @@
+2025-03-10  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
+	* Makefile: CLDR 46 に更新。
+	しかし絵文字と日本語には影響なし。
+
 2025-03-08  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
 	* Makefile: TOOLS_DIR を PATH に追加。

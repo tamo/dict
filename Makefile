@@ -203,8 +203,8 @@ cdb:
 # Unicode emoji
 # https://cldr.unicode.org/index/downloads/latest
 
-CLDR_VER = 45
-CLDR_COMMON_VER = 45.0
+CLDR_VER = 46
+CLDR_COMMON_VER = 46.0
 CLDR_URL = https://unicode.org/Public/cldr/$(CLDR_VER)/cldr-common-$(CLDR_COMMON_VER).zip
 
 SKK-JISYO.emoji: SKK-JISYO.emoji.en SKK-JISYO.emoji.ja unicode-license.txt
