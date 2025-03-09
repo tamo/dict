@@ -19,26 +19,18 @@ license: |-
   Software Foundation Inc., 51 Franklin St, Fifth Floor, Boston,
   MA 02110-1301, USA.
 note: |-
-  The original data of this file has come from the Postal Service
-  Agency (YUUSEI ZIGYOU TYOU), formerly known as the Ministry of
-  Posts and Telecommunications (YUUSEI SYOU), which disclaims
-  copyright.  For further detail, consult the following URL
-  [in Japanese]:
-  http://www.post.yusei.go.jp/newnumber/readme.htm
+  The original data of this file has come from JAPAN POST Co., Ltd.
+  (日本郵便株式会社), which disclaims its copyright.
+  For further detail, consult the following URL [in Japanese]:
+  https://www.post.japanpost.jp/zipcode/dl/readme.html
 
   The original data can freely be downloaded from:
-  http://www.post.yusei.go.jp/newnumber/lzh/
+  https://www.post.japanpost.jp/zipcode/dl/utf-zip.html
 
   *
 
-  The webpage above has moved due to the political issues:
-  http://www.post.japanpost.jp/zipcode/dl/readme.html
-
-  It comes to contain some land names not from the file above
-  but from SKK registration form:
-  http://openlab.jp/skk/registdic.cgi
-
-  Yes, you can add to it! We're awaiting your contributions.
+  This dictionary has come to contain some land names not from
+  the file above but from SKK registration form.
 
   *
 
@@ -57,5 +49,4 @@ note: |-
 
   *
 
-  Final update based on the data of: 2005/09/30
-  http://www.post.japanpost.jp/zipcode/dl/kogaki/lzh/add_0509.lzh
+  Final update based on the data of: 2025/03/08

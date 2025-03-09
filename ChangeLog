@@ -1,5 +1,16 @@
 2025-03-10  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* zipcode/zipcode-split.ts: 更新しやすいように
+	正規表現をめちゃくちゃ増やした。これにより make geo で
+	SKK-JISYO.geo.add に出てくる量が減るので楽になるはず。
+	また、deno のバージョンによって String.split(Regex) が
+	undefined を返すので filter するようにした。
+	* meta/SKK-JISYO.geo.yaml: 更新。古い URL は消した。
+	* SKK-JISYO.geo, json/SKK-JISYO.geo.json: 更新。
+	L にあるエントリは expr2 で消した。
+
+2025-03-10  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	* Makefile: CLDR 46 に更新。
 	しかし絵文字と日本語には影響なし。
 
