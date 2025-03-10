@@ -1,5 +1,9 @@
 2025-03-10  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* .github/workflows/make-on-push.yml: Deno 2 に更新。
+
+2025-03-10  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	* zipcode/zipcode-split.ts: 更新しやすいように
 	正規表現をめちゃくちゃ増やした。これにより make geo で
 	SKK-JISYO.geo.add に出てくる量が減るので楽になるはず。
