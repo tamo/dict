@@ -18,7 +18,7 @@ async function main(coding: string, ifile: string, ofile: string) {
           const kanji = Object.keys(henkan)[0]
           return ac + enlisp(kanji) +
             henkan[kanji].reduce((a: string, s: string) => {
-              return a + ";" + s
+              return a + ";" + enlisp(s)
             }, "") + "/"
         }, "") + "\n"
     }, "")

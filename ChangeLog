@@ -1,3 +1,7 @@
+2025-03-11  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
+	* script/json2txt.ts: 注釈も enlisp する
+
 2025-03-10  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
 	* .github/workflows/make-on-push.yml: Deno 2 に更新。
