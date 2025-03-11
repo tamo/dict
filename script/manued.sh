@@ -24,7 +24,7 @@ fi
 if [ -f ~/.docdiff/docdiff.conf ]; then
   echo "docdiff 設定ファイルが存在しています"
   echo "~/.docdiff/docdiff.conf を消去してください"
-  return 1
+  exit 1
 fi
 mkdir -p ~/.docdiff
 cat > ~/.docdiff/docdiff.conf <<EOF
@@ -45,12 +45,12 @@ echo
 COMPARED=${COMPARED:-HEAD}
 
 # Makefile 参照
-UTF_SRCS=" .edict2 .emoji .fullname .ivd zipcode/SKK-JISYO.zipcode zipcode/SKK-JISYO.office.zipcode "
+UTF_SRCS=" .edict2 .emoji .fullname .itaiji.UTF-8 .ivd .L zipcode/SKK-JISYO.zipcode zipcode/SKK-JISYO.office.zipcode "
 
 # デフォルトでチェックするファイル
 # edict2 と ivd は自動更新で大量に出るので除外
 if [ $# -eq 0 ]; then
-  OTHER_SRCS=" .assoc .china_taiwan .edict .geo .hukugougo .itaiji .itaiji.JIS3_4 .jinmei .JIS2 .JIS2004 .JIS3_4 .law .lisp .L .mazegaki .M .ML .okinawa .propernoun .pubdic+ .requested .S .station .wrong.annotated "
+  OTHER_SRCS=" .assoc .china_taiwan .edict .geo .hukugougo .itaiji .jinmei .JIS2 .law .lisp .mazegaki .M .ML .okinawa .propernoun .pubdic+ .requested .S .station .wrong.annotated "
   DEFAULT_SRCS="`echo ' '$UTF_SRCS $OTHER_SRCS | sed 's/ \.\(edict2\|ivd\) / /g' | sed 's/ \./ SKK-JISYO./g'`"
   set $DEFAULT_SRCS
 fi
@@ -81,12 +81,11 @@ while [ $# -ne 0 ]; do
   | sed -e '/^[-@]/d' \
   > $NEWLINES
 
-  if [ "`wc -l < $OLDLINES`" != "0" ] || [ "`wc -l < $NEWLINES`" != "0" ]; then
+  if [ `wc -l < $OLDLINES` != 0 ] || [ `wc -l < $NEWLINES` != 0 ]; then
     echo "	* $1:"
     deno --allow-read --allow-write "$THISDIR/manued-helper.ts" \
       --old $OLDLINES --new $NEWLINES
     docdiff --char --format=user $OLDLINES $NEWLINES
-    echo
     echo
   fi
 

@@ -1,3 +1,81 @@
+2025-03-12  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
+	* SKK-JISYO.L, SKK-JISYO.L.unannotated: UTF-8 にする。
+	notes と JIS3_4 と JIS2004 を取り入れる。
+	okuri-ari の「へんしょう」を「へんしょうs」に訂正。
+	* json/SKK-JISYO.L.json, meta/SKK-JISYO.L.yaml:
+	更新。JIS3_4 と JIS2004 の著作者をヘッダに追加。
+	* SKK-JISYO.JIS2004, SKK-JISYO.JIS3_4, SKK-JISYO.notes: 削除。
+
+	* SKK-JISYO.itaiji.JIS3_4: UTF-8 があるので削除。
+
+	* Makefile: L+ を標準で作成する。
+	上記の削除を反映。
+	wrong_check のバグを修正。
+
+	* filters/{README.md,abbrev-convert.rb,abbrev-simplify-keys.rb,annotation-filter.rb,asayaKe.rb,complete-numerative.rb,conjugation.rb,make-tankan-dic.rb,skkdictools.rb}:
+	新規。というか skktools からコピー。-8 で UTF-8 を扱うため。
+
+	* committers.md: 辞書の追加と削除を反映。
+	* script/manued.sh: 辞書の追加と削除を反映。
+	エラー時に return ではなく exit する。
+	wc が "0" ではなく "       0" を返すことがあるので対応。
+	* script/manued-helper.ts: ファイル末尾で改行。docdiff のため。
+
+
+	* 以下は wrong_check による訂正。
+
+	* SKK-JISYO.L:
+	Modify よm /.../{呼/->}
+	Modify ほr /惚;女に惚れる/{愡/->}
+	Modify ひだりきk /左利/{左効;‖削除待ち/->}
+	Modify のk /除;(put aside)「取り除ける」/{徐/->}
+	Modify つつしm /慎;(be prudent)「言葉を慎む/{鎮/鎭/->}
+	Modify たどr /辿/{到/->}
+	Remove さんはいしこm /山廃仕込;?/
+	Modify さしだs /差し出/{指し出/->}
+	Modify きm /極/{窮/->}
+	Remove かんしちどおr /環七通/
+	Modify かわk /渇;(thirst) 喉が渇く/{喝/->}
+	Modify かk /.../{買/->}
+	Modify いr /.../{言/->}
+	Modify いn /.../{言/->}
+	Modify いk /.../{言/->}
+	Modify あt /逢;(人と|運命的にあう) 巡り逢う/{蓬/->}
+	Modify せいれん /清廉;「-潔白」/{清簾/->}
+
+	* SKK-JISYO.fullname:
+	Modify おがたけん /緒形拳;フルネーム,俳優/{緒方拳;フルネーム,俳優/->}
+
+	* SKK-JISYO.geo:
+	Remove かとべ /門部/
+	Modify かじや /加治屋/鍛治屋{->;wrong: 元データの誤りか}/梶屋/鍜冶屋/鍜治屋{->;wrong: 元データの誤りか}/
+	Modify ていきょう /貞享{->;wrong: 元データの誤りか}/
+
+	* SKK-JISYO.itaiji:
+	Modify か /が/カ/{ケ/->}ヵ/ヶ/箇/個/个/
+
+	* SKK-JISYO.jinmei:
+	Remove しぎョう /執行;人名/
+	Modify しぎょう /史暁;名{->/執行;人名}/
+	Modify おがたけん /緒形拳/{緒方拳;人名,フルネーム/->}
+	Modify だんふみ /檀ふみ;人名,フルネーム/{壇ふみ/->}
+	Modify ながぶちつよし /長渕剛{/長淵剛->};人名,フルネーム/
+	Modify ひぐち /樋口;姓/{樋->;姓/}
+
+	* SKK-JISYO.propernoun:
+	Remove かわいでしょぼう /河出書房;[出版社名]/
+	Remove かわいでしょぼうしんしゃ /河出書房新社;[出版社名]/
+	Remove どうでん /北海道電力;[企業名]/道電;[略語][企業名]北海道電力/
+	Modify aist /産業技術総合研究所/{奈良先端科学技術大学院大学/奈良先端/->}
+	Modify けいぶんしゃ /勁文社;[出版社名] NB:2002年倒産/啓文社;[出版社名]/形文社;[出版社名]/{勁分社;[出版社名]/->}
+	Modify しんふじえき /新{冨->富}士駅/
+	Modify そうけんびちゃ /{壮->爽}健美茶;[商標]/
+	Modify ふじみしゅっぱん /富士美出版;[出版社名](辰巳出版グループ)www.tg-net.co.jp/{富士見出版;[出版社名]/->}
+
+	* SKK-JISYO.station:
+	Modify えいでん{い->}でまちやなぎえき /叡電出町柳駅/
+
 2025-03-11  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
 	* script/json2txt.ts: 注釈も enlisp する

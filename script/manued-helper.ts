@@ -35,5 +35,5 @@ allKeys.forEach((v) => {
   }
 })
 
-Deno.writeTextFileSync(params.old, olds.join("\n"))
-Deno.writeTextFileSync(params.new, news.join("\n"))
+Deno.writeTextFileSync(params.old, olds.join("\n") + "\n")
+Deno.writeTextFileSync(params.new, news.join("\n") + "\n")

@@ -6,8 +6,6 @@ SKK 辞書 committer のみなさまへ
 
 - SKK-JISYO.{SML}
 - SKK-JISYO.JIS2
-- SKK-JISYO.JIS3_4
-- SKK-JISYO.JIS2004
 - SKK-JISYO.geo[^1]
 - SKK-JISYO.law
 - SKK-JISYO.wrong
@@ -21,11 +19,10 @@ SKK 辞書 committer のみなさまへ
 - SKK-JISYO.pinyin
 - SKK-JISYO.propernoun
 - SKK-JISYO.station
-- SKK-JISYO.itaiji.JIS3_4[^2]
 - SKK-JISYO.noregist
 - SKK-JISYO.not_wrong
 - SKK-JISYO.requested
-- SKK-JISYO.wrong.annotated[^3]
+- SKK-JISYO.wrong.annotated[^2]
 
 上記の各辞書については、 the Free Software Foundation が発行している
 the GNU General Public License version 2 以降が適用されます。詳細につ
@@ -33,9 +30,7 @@ the GNU General Public License version 2 以降が適用されます。詳細に
 
 [^1]: geo に関しては 2.3. も参照。
 
-[^2]: itaiji および itaiji.UTF-8 は GPL ではない。
-
-[^3]: wrong は wrong.annotated から自動生成。
+[^2]: wrong は wrong.annotated から自動生成。
 
 ## 1.2. GPL 以外のライセンスが適用される辞書
 
@@ -115,7 +110,8 @@ SKK-JISYO.itaiji.UTF-8 は以下の 3 データを合成しています。
 - [JISX0213 InfoCenter](https://www.jca.apc.org/~earthian/aozora/0213.html)
 - [東京大学史料編纂所データベース異体字同定一覧](https://wwwap.hi.u-tokyo.ac.jp/ships/itaiji_list.jsp)
 
-itaiji.JIS3_4 を使用していないため、GPL ではありません。
+itaiji.JIS3_4 は GPL でしたが、それを使用せずに
+元データから直接変換しているため、GPL ではありません。
 
 東京大学史料編纂所データベース異体字同定一覧のライセンスは
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.ja) です。
@@ -281,10 +277,10 @@ meta/SKK-JISYO.geo.yaml の最終更新日も更新します。
 ヘッダに書かれているデータは 404 エラーです。
 基本どおり JSON を編集します。
 
-### 2.2.8. SKK-JISYO.itaiji.JIS3_4
+### 2.2.8. SKK-JISYO.itaiji.UTF-8
 
-ヘッダに書かれた方式で直接編集します。
-(JSON は存在しない: UTF-8 で itaiji に統合する予定だから？)
+itaiji とデータファイルで自動生成されるため、
+変更したい場合は Makefile を更新することになります。
 
 ### 2.2.9. SKK-JISYO.ivd
 
