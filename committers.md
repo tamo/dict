@@ -4,7 +4,7 @@ SKK 辞書 committer のみなさまへ
 # 1. ライセンス
 ## 1.1. GPL が適用される辞書
 
-- SKK-JISYO.{SML}
+- SKK-JISYO.{SL}
 - SKK-JISYO.JIS2
 - SKK-JISYO.geo[^1]
 - SKK-JISYO.law
@@ -12,10 +12,8 @@ SKK 辞書 committer のみなさまへ
 - SKK-JISYO.jinmei
 - SKK-JISYO.lisp
 - SKK-JISYO.assoc
-- SKK-JISYO.china_taiwan
 - SKK-JISYO.fullname
 - SKK-JISYO.hukugougo
-- SKK-JISYO.mazegaki
 - SKK-JISYO.pinyin
 - SKK-JISYO.propernoun
 - SKK-JISYO.station
@@ -34,29 +32,17 @@ the GNU General Public License version 2 以降が適用されます。詳細に
 
 ## 1.2. GPL 以外のライセンスが適用される辞書
 
-### 1.2.1. SKK-JISYO.pubdic+
+### 1.2.1. SKK-JISYO.edict2
 
-SKK-JISYO.pubdic+ は、 the Pubdic+ project によって作成された pubdic.p
-を SKK 辞書形式に加工したものです。
-pubdic.p には the Pubdic+ project 独自の配布条件が付けられていますので、
-SKK-JISYO.pubdic+ はこれを継承します。
+SKK-JISYO.edict2 は [The Electronic Dictionary Research and Development
+Group](http://www.edrdg.org/) による「和英辞典」edict2u をスクリプトで
+SKK 辞書形式の「英和辞典」に加工したものです。
 
-配布条件を一言で言うと「いかなる利用方法も可」というものです。詳細は
-SKK-JISYO.pubdic+ のヘッダー部分をご覧下さい。
-
-### 1.2.2. SKK-JISYO.edict, SKK-JISYO.edict2
-
-SKK-JISYO.edict は [The Electronic Dictionary Research and Development
-Group](http://www.edrdg.org/) による「和英辞典」edict を tools/convert2skk/edict2skk.awk
-を利用して SKK 辞書形式の「英和辞典」に加工したものです。
-
-同じく、SKK-JISYO.edict2 は edict2u を加工したものです。
-
-edict, edict2u ともに Creative Commons Attribution-ShareAlike Licence (V3.0)
-ですので、それらの派生である SKK-JISYO.edict, SKK-JISYO.edict2 も同じ
+edict2u は Creative Commons Attribution-ShareAlike Licence (V3.0)
+ですので、それらの派生である SKK-JISYO.edict2 も同じ
 ライセンスとしました。
 
-### 1.2.3. SKK-JISYO.geo
+### 1.2.2. SKK-JISYO.geo
 
 SKK-JISYO.geo は、日本郵便のページにあるデータをもと
 に SKK 辞書形式の「地名辞典」に加工したものです。
@@ -70,12 +56,12 @@ SKK-JISYO.geo は、日本郵便のページにあるデータをもと
 とあります。同社のご厚意に感謝しつつ、自由に配布できるよう、明示的に
 GPL を適用しました。
 
-### 1.2.4. SKK-JISYO.okinawa
+### 1.2.3. SKK-JISYO.okinawa
 
 この辞書は Public Domain です。使用・変更・配布に関しては一切の制限を
 つけません。商品などに組み込むことも自由に行なってください。
 
-### 1.2.5. SKK-JISYO.office.zipcode, SKK-JISYO.zipcode
+### 1.2.4. SKK-JISYO.office.zipcode, SKK-JISYO.zipcode
 
 geo と同じデータに基づきますが、機械的に抽出しているため
 元のデータと同じく Public domain です。
@@ -83,7 +69,7 @@ geo と同じデータに基づきますが、機械的に抽出しているた�
 ただし、これらを生成するためのプログラムは GPL が適用されます。
 [zipcode/README.md](zipcode/README.md) をご覧下さい。
 
-### 1.2.6. SKK-JISYO.emoji
+### 1.2.5. SKK-JISYO.emoji
 
 SKK-JISYO.emoji は、[Unicode Common Locale Data Repository](http://cldr.unicode.org/)
 の cldr-common.zip に含まれる annotations/(en|ja).xml から生成していま
@@ -91,22 +77,18 @@ SKK-JISYO.emoji は、[Unicode Common Locale Data Repository](http://cldr.unicod
 
 unicode license です。
 
-### 1.2.7. SKK-JISYO.ivd
+### 1.2.6. SKK-JISYO.ivd
 
 SKK-JISYO.ivd は、 https://unicode.org/ の ivd/data/*/IVD_Sequences.txt
 から生成しています。
 
 unicode license です。
 
-### 1.2.8. SKK-JISYO.itaiji
+### 1.2.7. SKK-JISYO.itaiji
 
-Public domain です。
+SKK-JISYO.itaiji は以下の 3 データを合成しています。
 
-### 1.2.9. SKK-JISYO.itaiji.UTF-8
-
-SKK-JISYO.itaiji.UTF-8 は以下の 3 データを合成しています。
-
-- 上記 itaiji 辞書
+- 異体辞書 ([Vector](https://www.vector.co.jp/soft/win95/writing/se094800.html) 参照)
 - [JISX0213 InfoCenter](https://www.jca.apc.org/~earthian/aozora/0213.html)
 - [東京大学史料編纂所データベース異体字同定一覧](https://wwwap.hi.u-tokyo.ac.jp/ships/itaiji_list.jsp)
 
@@ -115,6 +97,8 @@ itaiji.JIS3_4 は GPL でしたが、それを使用せずに
 
 東京大学史料編纂所データベース異体字同定一覧のライセンスは
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.ja) です。
+`『史料編纂所データベース異体字同定一覧』（東京大学史料編纂所編）を改変`
+という表示が必要です。
 
 
 # 2. 更新手順
@@ -154,19 +138,10 @@ json/SKK-JISYO.*.json 内の各エントリは以下の形式です。
 
 ### 2.2.1. 更新しないもの
 
-- pubdic+
-- edict
 - requested (他の辞書に登録してここから減らすのはあり)
 - wrong (annotated の方を編集する)
 
-### 2.2.2. SKK-JISYO.china_taiwan
-
-csv/china_taiwan.csv を更新して make します。
-そこから script/txt2json.ts で JSON に戻します。
-
-つまり、最低限プルリクエストに含めるのは CSV と JSON です。
-
-### 2.2.3. SKK-JISYO.edict2
+### 2.2.2. SKK-JISYO.edict2
 
 ```
 make SKK-JISYO.edict2
@@ -178,7 +153,7 @@ JSON も更新されます。
 edrdg.org で更新される以外に
 こちらで更新することはありません。
 
-### 2.2.4. SKK-JISYO.emoji
+### 2.2.3. SKK-JISYO.emoji
 
 https://cldr.unicode.org/index/downloads を確認して、
 Makefile 内の `CLDR_VER` と `CLDR_COMMON_VER` を更新します。
@@ -234,16 +209,16 @@ unicode-license.txt も確認します。
 変更されていたら yaml も更新してください。
 
 
-### 2.2.5. SKK-JISYO.geo
+### 2.2.4. SKK-JISYO.geo
 
 手作業と自動生成情報のハイブリッドです。
 
-#### 2.2.5.1 手作業で JSON から更新する場合
+#### 2.2.4.1 手作業で JSON から更新する場合
 
 基本どおりです。
 情報源について meta/SKK-JISYO.geo.yaml を更新することも忘れずに。
 
-#### 2.2.5.2. zipcode から更新する場合
+#### 2.2.4.2. zipcode から更新する場合
 
 必要なら zipcode から抽出して
 SKK-JISYO.geo にマージしてから script/txt2json.ts で JSON に戻します。
@@ -267,22 +242,17 @@ meta/SKK-JISYO.geo.yaml の最終更新日も更新します。
 
 (この場合はおそらく zipcode も更新が必要)
 
-### 2.2.6. SKK-JISYO.hukugougo
+### 2.2.5. SKK-JISYO.hukugougo
 
 ヘッダには「機械的に抽出」とありますが不明です。
 基本どおり JSON を編集します。
 
-### 2.2.7. SKK-JISYO.itaiji
+### 2.2.6. SKK-JISYO.itaiji
 
-ヘッダに書かれているデータは 404 エラーです。
-基本どおり JSON を編集します。
+`SKK-JISYO.itaiji.original` および
+`json/SKK-JISYO.itaiji.original.json` を編集できます。
 
-### 2.2.8. SKK-JISYO.itaiji.UTF-8
-
-itaiji とデータファイルで自動生成されるため、
-変更したい場合は Makefile を更新することになります。
-
-### 2.2.9. SKK-JISYO.ivd
+### 2.2.7. SKK-JISYO.ivd
 
 https://www.unicode.org/ivd/ を見て
 Makefile の `IVD_VER` を更新します。
@@ -292,17 +262,11 @@ Makefile の `IVD_VER` を更新します。
 make SKK-JISYO.ivd
 ```
 
-### 2.2.10. SKK-JISYO.lisp
+### 2.2.8. SKK-JISYO.lisp
 
 直接編集します。(JSON は存在しない)
 
-### 2.2.11. SKK-JISYO.mazegaki
-
-SKK-JISYO.M から skk-mkmgk.el で生成、とのことですが古い情報のようです。
-https://khiker.hatenablog.jp/entry/20101225/ddskk_mazegaki_dict
-のような方法を検討すべきかもしれません。(あるいは廃止を検討)
-
-### 2.2.12. zipcode
+### 2.2.9. zipcode
 
 [zipcode/README.md](zipcode/README.md) を参照下さい。
 (JSON は存在しない)
@@ -387,27 +351,9 @@ S 辞書に両方登録する必要があるのかというと、「くし」だ
   候補) の数次第。たとえば、「こう」と読む字はもう増やしたくない、とか、
   「け」と読む字は 8つだけだから、正しいならやはり入れようかな、とか。
 
-## 3.3. SKK-JISYO.M
+## 3.3. SKK-JISYO.L
 
-- 既に登録されている文字について、明らかに間違いでない限り削除はしない。
-
-- 単漢字を充実させる。S 辞書の成果を取り込むし、独自に追加することもあ
-  る。
-
-  一文字の単漢字でもM辞書になくてよさそうなエントリーだってあるでしょ
-  う。古語のエントリーの多くはきっとそうです。「ぶんまわし /規/」とか、
-  M 辞書にはいらない。
-
-- 単漢字以外の追加登録は、よっぽどのことがない限り行わない。
-
-- size 制限として 20 KB ぐらいを目安とする。
-
-  SKK 本体と M 辞書を入れて FD 1 枚に収まるようにという主旨 (SKK 本体
-  もどんどん大きくなるので大雑把な基準) 。
-
-## 3.4. SKK-JISYO.L
-
-### 3.4.1. 単純なかな → カナ、ascii → 全角英文字の変換エントリを含まない
+### 3.3.1. 単純なかな → カナ、ascii → 全角英文字の変換エントリを含まない
 
 既存のエントリは削除しました。そういうものを追加し始めるときりがない、
 というのが追加拒否の理由です。そういう変換が必要な方にはプログラム側で
@@ -430,7 +376,7 @@ S 辞書に両方登録する必要があるのかというと、「くし」だ
 のようなものも許容範囲とします。要するに SKK の他の変換方法で、一回で
 変換できないものは許容範囲です。
 
-### 3.4.2. annotation の積極的付加
+### 3.3.2. annotation の積極的付加
 
 # 4. ChangeLog の記述方法について
 
@@ -624,7 +570,7 @@ skk-henkan-strict-okuri-precedence を t にセットすると、送り仮名が
 し語の補完で最近確定した見出しから順に出力するため、などの理由からこの
 ような実装になっています。
 
-## 5.6. SKK-JISYO.{SML} の送りありエントリの見出し語のソートが逆順になっている
+## 5.6. SKK-JISYO.{SL} の送りありエントリの見出し語のソートが逆順になっている
 
 なんででしょう？  分かりません (^^;;。
 

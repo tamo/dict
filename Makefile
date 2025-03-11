@@ -11,11 +11,10 @@ GREP	  = grep
 GZIP	  = gzip -9
 ICONV	  = iconv
 MD5	  = md5
-MV	  = mv --force
+MV	  = mv -f
 RM	  = /bin/rm -f
 RUBY	  = ruby -I ./filters
 SED	  = sed
-SED_EUC	  = LC_CTYPE=ja_JP.EUC-JP $(SED)
 TAR	  = tar
 TOUCH	  = touch
 UNZIP	  = unzip -o
@@ -24,59 +23,52 @@ ZIPDIC_DIR  = ./zipcode
 
 TOOLS_DIR = ../tools
 COUNT	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-count
-EXPR	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-expr
 EXPR2	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-expr2
 SORT	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-sort
 
-DIC2PDB = dic2pdb
-DICCOMPACT = diccompact.rb
-KANADIC2ROMADIC = kanadic2romadic
-NKF = nkf
-SKKDIC2KANADIC = skkdic2kanadic
 
+SRCS = \
+	SKK-JISYO.wrong.annotated \
+	SKK-JISYO.requested \
+	SKK-JISYO.lisp \
+	# SKK-JISYO.noregist
 
-SRCS	  = SKK-JISYO.L SKK-JISYO.ML SKK-JISYO.M SKK-JISYO.S SKK-JISYO.JIS2 \
-		SKK-JISYO.pubdic+ SKK-JISYO.wrong.annotated \
-		SKK-JISYO.okinawa SKK-JISYO.geo SKK-JISYO.jinmei SKK-JISYO.law \
-		SKK-JISYO.mazegaki SKK-JISYO.assoc SKK-JISYO.itaiji \
-		SKK-JISYO.itaiji.UTF-8 SKK-JISYO.china_taiwan \
-		SKK-JISYO.propernoun SKK-JISYO.station SKK-JISYO.requested \
-		SKK-JISYO.fullname SKK-JISYO.lisp
+TARGETS = \
+	SKK-JISYO.JIS2 \
+	SKK-JISYO.L \
+	SKK-JISYO.S \
+	SKK-JISYO.assoc \
+	SKK-JISYO.edict2 \
+	SKK-JISYO.emoji \
+	SKK-JISYO.fullname \
+	SKK-JISYO.geo \
+	SKK-JISYO.hukugougo \
+	SKK-JISYO.itaiji \
+	SKK-JISYO.jinmei \
+	SKK-JISYO.law \
+	SKK-JISYO.okinawa \
+	SKK-JISYO.propernoun \
+	SKK-JISYO.station \
+	# SKK-JISYO.itaiji.UTF-8
 
-# SKK-JISYO.noregist SKK-JISYO.hukugougo
-
-# JSON から生成
-EUC_SRCS = SKK-JISYO.assoc SKK-JISYO.china_taiwan SKK-JISYO.edict SKK-JISYO.geo SKK-JISYO.hukugougo SKK-JISYO.itaiji SKK-JISYO.jinmei SKK-JISYO.JIS2 SKK-JISYO.law SKK-JISYO.mazegaki SKK-JISYO.M SKK-JISYO.ML SKK-JISYO.okinawa SKK-JISYO.propernoun SKK-JISYO.pubdic+ SKK-JISYO.S SKK-JISYO.station
-UTF_SRCS = SKK-JISYO.edict2 SKK-JISYO.emoji SKK-JISYO.fullname SKK-JISYO.itaiji.UTF-8 SKK-JISYO.L SKK-JISYO.pinyin
 SKK-JISYO.%: json/SKK-JISYO.%.json meta/SKK-JISYO.%.yaml
-	if [ "x$(filter $@,$(EUC_SRCS))" = "x$@" ]; then \
-		$(DENO) run --allow-read --allow-write --allow-net script/json2txt.ts \
-		-c EUC-JP -i json/$@.json -o $@ ; \
-	elif [ "x$(filter $@,$(UTF_SRCS))" = "x$@" ]; then \
-		$(DENO) run --allow-read --allow-write --allow-net script/json2txt.ts \
-		-c UTF-8 -i json/$@.json -o $@ ; \
-	fi
+	$(DENO) run --allow-read --allow-write --allow-net script/json2txt.ts \
+	-c UTF-8 -i json/$@.json -o $@
 
-BIN_SRCS  = #PBinlineDB.pdb
-ALL_SRCS  = $(SRCS) $(BIN_SRCS) $(EUC_SRCS) $(UTF_SRCS) SKK-JISYO.wrong SKK-JISYO.L.unannotated
+ALL_SRCS  = $(SRCS) $(TARGETS) SKK-JISYO.wrong SKK-JISYO.L.unannotated
 # SKK-JISYO.L+ SKK-JISYO.L.taciturn SKK-JISYO.total
-
-PYTHON    = python
-SKK2CDB   = skk2cdb.py -f
-CDB_SOURCE = ./SKK-JISYO.L
-CDB_TARGET = ./`basename $(CDB_SOURCE)`.cdb
 
 clean:
 	$(RM) *.gz* *~ `find . -name '*~'` `find . -name '.*~'` `find . -name '.#*'` \
-	*.unannotated SKK-JISYO.wrong PBinlineDB.pdb *.tmp *.u8 *.w PBinlineDB.dic *.taciturn \
-	SKK-JISYO.L+ SKK-JISYO.total SKK-JISYO.total+zipcode SKK-JISYO.L.header SKK-JISYO.china_taiwan \
+	*.unannotated SKK-JISYO.wrong *.tmp *.w *.taciturn \
+	SKK-JISYO.L+ SKK-JISYO.total SKK-JISYO.total+zipcode SKK-JISYO.L.header \
 	SKK-JISYO.emoji.en SKK-JISYO.emoji.ja en.xml ja.xml \
 	itaiji_list.* variant0213.* jisx0213misc.zip \
-	emoji-list.txt $(EUC_SRCS) $(UTF_SRCS)
+	emoji-list.txt $(TARGETS)
 
 archive: gzip
 
-unannotated: SKK-JISYO.L.unannotated SKK-JISYO.wrong SKK-JISYO.china_taiwan.unannotated
+unannotated: SKK-JISYO.L.unannotated SKK-JISYO.wrong
 
 SKK-JISYO.L.unannotated: SKK-JISYO.L
 	$(GAWK) -f $(TOOLS_DIR)/unannotation.awk SKK-JISYO.L > SKK-JISYO.L.unannotated
@@ -84,28 +76,9 @@ SKK-JISYO.L.unannotated: SKK-JISYO.L
 SKK-JISYO.wrong: SKK-JISYO.wrong.annotated
 	$(GAWK) -f $(TOOLS_DIR)/unannotation.awk SKK-JISYO.wrong.annotated > SKK-JISYO.wrong
 
-SKK-JISYO.china_taiwan: csv/china_taiwan.csv
-	$(RUBY) $(TOOLS_DIR)/convert2skk/ctdicconv.rb csv/china_taiwan.csv > SKK-JISYO.tmp
-	$(EXPR) SKK-JISYO.tmp | $(SORT) - > SKK-JISYO.1.tmp
-	cat SKK-JISYO.china_taiwan.header SKK-JISYO.1.tmp > SKK-JISYO.china_taiwan
-	$(RM) SKK-JISYO.tmp SKK-JISYO.1.tmp
-
-SKK-JISYO.china_taiwan.unannotated: SKK-JISYO.china_taiwan csv/china_taiwan.csv
-	$(GAWK) -f $(TOOLS_DIR)/unannotation.awk SKK-JISYO.china_taiwan > SKK-JISYO.china_taiwan.unannotated
-
-wrong_check: SKK-JISYO.wrong SKK-JISYO.wrong.u8
-	for file in $(EUC_SRCS) ; do \
+wrong_check: SKK-JISYO.wrong
+	for file in $(TARGETS) ; do \
 	    $(EXPR2) $$file - SKK-JISYO.wrong > $$file.tmp ;\
-	    $(EXPR2) $$file - $$file.tmp > $$file.w ;\
-	    $(RM) $$file.tmp ;\
-	    $(COUNT) $$file.w | $(GREP) -v ': 0 candidate' | \
-	      $(SED_EUC) -e 's/\.w:/:/' -e 's/: \([0-9]+\) /\1 wrong /' ;\
-	    if [ ! -s $$file.w ]; then \
-	      $(RM) $$file.w ; \
-	    fi ;\
-	done
-	for file in $(UTF_SRCS) ; do \
-	    $(EXPR2) $$file - SKK-JISYO.wrong.u8 > $$file.tmp ;\
 	    $(EXPR2) $$file - $$file.tmp > $$file.w ;\
 	    $(RM) $$file.tmp ;\
 	    $(COUNT) $$file.w | $(GREP) -v ': 0 candidate' | \
@@ -115,26 +88,12 @@ wrong_check: SKK-JISYO.wrong SKK-JISYO.wrong.u8
 	    fi ;\
 	done
 
-PBinlineDB.dic: clean SKK-JISYO.L.unannotated
-	$(SKKDIC2KANADIC) SKK-JISYO.L.unannotated | $(KANADIC2ROMADIC) - | $(NKF) -s > PBinlineDB.dic
-
-PBinlineDB_compact.pdb: PBinlineDB.dic
-	 $(DICCOMPACT) PBinlineDB.dic | $(DIC2PDB) - PBinlineDB.pdb
-
-PBinlineDB_full.pdb: PBinlineDB.dic
-	$(DIC2PDB) PBinlineDB.dic PBinlineDB.pdb
-
-PBinlineDB.pdb: PBinlineDB_full.pdb
-	$(RM) PBinlineDB.dic
 
 gzip: clean $(ALL_SRCS)
 	for file in $(ALL_SRCS); do \
 	  $(GZIP) -fc $$file >$$file.gz ;\
 	  $(MD5) $$file.gz >$$file.gz.md5; \
 	done
-	$(TAR) cvpf SKK-JISYO.edict.tar SKK-JISYO.edict edict_doc.html
-	$(GZIP) -f SKK-JISYO.edict.tar
-	$(MD5) SKK-JISYO.edict.tar.gz > SKK-JISYO.edict.tar.gz.md5
 	$(TAR) cvzpf zipcode.tar.gz --exclude-from=./skk.ex ./zipcode
 	$(MD5) zipcode.tar.gz >zipcode.tar.gz.md5
 
@@ -147,14 +106,14 @@ SKK-JISYO.L+: SKK-JISYO.L SKK-JISYO.L.header
 	$(EXPR2) SKK-JISYO.L + SKK-JISYO.tmp | cat SKK-JISYO.L.header - > SKK-JISYO.L+
 	$(RM) SKK-JISYO.tmp
 
-SKK-JISYO.total: SKK-JISYO.L SKK-JISYO.geo.u8 SKK-JISYO.station.u8 SKK-JISYO.jinmei.u8 SKK-JISYO.propernoun.u8 SKK-JISYO.fullname SKK-JISYO.law.u8 SKK-JISYO.okinawa.u8 SKK-JISYO.hukugougo.u8 SKK-JISYO.assoc.u8 SKK-JISYO.L.header
+SKK-JISYO.total: SKK-JISYO.L SKK-JISYO.geo SKK-JISYO.station SKK-JISYO.jinmei SKK-JISYO.propernoun SKK-JISYO.fullname SKK-JISYO.law SKK-JISYO.okinawa SKK-JISYO.hukugougo SKK-JISYO.assoc SKK-JISYO.L.header
 	$(RUBY) ./filters/conjugation.rb         -Cpox8   SKK-JISYO.L >  SKK-JISYO.tmp
 	$(RUBY) ./filters/asayaKe.rb             -p8      SKK-JISYO.L >> SKK-JISYO.tmp
 	$(RUBY) ./filters/complete-numerative.rb -pU8     SKK-JISYO.L >> SKK-JISYO.tmp
 	$(RUBY) ./filters/abbrev-convert.rb      -K8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
 	$(RUBY) ./filters/abbrev-convert.rb      -w8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
 	# order is very important here
-	$(EXPR2) SKK-JISYO.geo.u8 + SKK-JISYO.station.u8 + SKK-JISYO.jinmei.u8 + SKK-JISYO.propernoun.u8 + SKK-JISYO.fullname + SKK-JISYO.tmp + SKK-JISYO.law.u8 + SKK-JISYO.okinawa.u8 + SKK-JISYO.hukugougo.u8 + SKK-JISYO.assoc.u8 - SKK-JISYO.L > SKK-JISYO.addition
+	$(EXPR2) SKK-JISYO.geo + SKK-JISYO.station + SKK-JISYO.jinmei + SKK-JISYO.propernoun + SKK-JISYO.fullname + SKK-JISYO.tmp + SKK-JISYO.law + SKK-JISYO.okinawa + SKK-JISYO.hukugougo + SKK-JISYO.assoc - SKK-JISYO.L > SKK-JISYO.addition
 	# why eliminating SKK-JISYO.L once? -- to not add too noisy
 	# annotations from SKK-JISYO.jinmei and so on.
 	$(EXPR2) SKK-JISYO.L + SKK-JISYO.addition | cat SKK-JISYO.L.header - > SKK-JISYO.total
@@ -188,9 +147,6 @@ SKK-JISYO.L.header: SKK-JISYO.L
 	echo ';; (This dictionary was automatically generated from SKK dictionaries)' > SKK-JISYO.L.header
 	$(SED) -n '/^;; okuri-ari entries./q;p' SKK-JISYO.L >> SKK-JISYO.L.header
 
-%.u8: %
-	$(ICONV) -f euc-jp -t utf-8 $< > $@
-
 
 unannotated-all: unannotated SKK-JISYO.L+.unannotated SKK-JISYO.total.unannotated SKK-JISYO.total+zipcode.unannotated
 
@@ -198,10 +154,7 @@ taciturn-all: SKK-JISYO.L.taciturn SKK-JISYO.L+.taciturn SKK-JISYO.total.tacitur
 
 annotated-all: SKK-JISYO.L+ SKK-JISYO.total SKK-JISYO.total+zipcode
 
-all: $(EUC_SRCS) $(UTF_SRCS) annotated-all unannotated-all taciturn-all
-
-cdb:
-	$(PYTHON) $(TOOLS_DIR)/$(SKK2CDB) $(CDB_TARGET) $(CDB_SOURCE)
+all: $(TARGETS) annotated-all unannotated-all taciturn-all
 
 
 # Unicode emoji
@@ -282,8 +235,12 @@ IVD_Collections.txt:
 	test -f IVD_Collections.txt || $(CURL) -o IVD_Collections.txt https://unicode.org/ivd/data/$(IVD_VER)/IVD_Collections.txt
 
 
-SKK-JISYO.itaiji.UTF-8: SKK-JISYO.itaiji.UTF-8.header SKK-JISYO.itaiji.u8 itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213misc.zip
-	$(EXPR2) SKK-JISYO.itaiji.u8 + itaiji_list.skk + variant0213.txt.skk | cat SKK-JISYO.itaiji.UTF-8.header - > SKK-JISYO.itaiji.UTF-8
+SKK-JISYO.itaiji: SKK-JISYO.itaiji.original itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213misc.zip
+	$(EXPR2) SKK-JISYO.itaiji.original + itaiji_list.skk + variant0213.txt.skk > SKK-JISYO.itaiji.UTF-8
+	$(RM)   json/SKK-JISYO.itaiji.UTF-8.json
+	$(MAKE) json/SKK-JISYO.itaiji.UTF-8.json
+	$(MAKE)      SKK-JISYO.itaiji.UTF-8
+	$(MV)        SKK-JISYO.itaiji.UTF-8 SKK-JISYO.itaiji
 
 # 史料編纂所データベース異体字同定一覧（東京大学史料編纂所編）
 SHIPS_URL = https://wwwap.hi.u-tokyo.ac.jp/ships/itaiji_list.jsp
@@ -307,16 +264,10 @@ jisx0213misc.zip:
 	$(CURL) -o jisx0213misc.zip $(JISX_URL)
 
 # json/%.json が % に依存すると循環するので注意
-EUC_JSON = $(patsubst %,json/%.json,$(EUC_SRCS))
-UTF_JSON = $(patsubst %,json/%.json,$(UTF_SRCS))
-json: $(EUC_JSON) $(UTF_JSON)
+JSONS = $(patsubst %,json/%.json,$(TARGETS))
+json: $(JSONS)
 json/%.json:
 	TXT=$(patsubst json/%.json,%,$@) ; \
-	if [ "x$(filter $@,$(EUC_JSON))" = "x$@" ]; then \
-		$(DENO) run --allow-read --allow-write --allow-net script/txt2json.ts \
-		-c EUC-JP -i $${TXT} -m meta/$${TXT}.yaml -o $@ -s schema/jisyo.schema.v0.1.0.json ; \
-	elif [ "x$(filter $@,$(UTF_JSON))" = "x$@" ]; then \
-		$(DENO) run --allow-read --allow-write --allow-net script/txt2json.ts \
-		-c UTF-8 -i $${TXT} -m meta/$${TXT}.yaml -o $@ -s schema/jisyo.schema.v0.1.0.json ; \
-	fi
+	$(DENO) run --allow-read --allow-write --allow-net script/txt2json.ts \
+	-c UTF-8 -i $${TXT} -m meta/$${TXT}.yaml -o $@ -s schema/jisyo.schema.v0.1.0.json
 # end of Makefile.

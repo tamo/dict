@@ -1,5 +1,21 @@
 2025-03-12  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* Makefile: いろいろ削減し、すべて UTF-8 にする。
+	M, ML, pubdic+, mazegaki, china_taiwan, edict, pinyin を廃止。
+	また itaiji.UTF-8 は itaiji にする。元の itaiji は itaiji.original。
+	PDB と CDB を廃止。
+	MV=mv -f (--force は GNU だけ?)
+
+	* SKK-JISYO.{M,ML,china_taiwan,edict,itaiji.UTF-8,mazegaki,pinyin,pubdic+}: 削除。
+	* csv/china_taiwan.csv: 削除。
+	* json/SKK-JISYO.{M,ML,china_taiwan,edict,itaiji.UTF-8,mazegaki,pinyin,pubdic+}.json: 削除。
+	* meta/SKK-JISYO.{M,ML,china_taiwan,edict,mazegaki,pubdic+}.yaml: 削除。
+	* SKK-JISYO.{JIS2,L.unannotated,S,assoc,geo,hukugougo,itaiji,jinmei,law,okinawa,propernoun,station,wrong,wrong.annotated}: UTF-8 に変換。
+
+	* script/manued.sh: 辞書の削減と UTF-8 化に追従。
+
+2025-03-12  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	* SKK-JISYO.L, SKK-JISYO.L.unannotated: UTF-8 にする。
 	notes と JIS3_4 と JIS2004 を取り入れる。
 	okuri-ari の「へんしょう」を「へんしょうs」に訂正。

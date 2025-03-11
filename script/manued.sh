@@ -44,14 +44,11 @@ echo
 # HEAD^..HEAD とかにすると便利な場合もある
 COMPARED=${COMPARED:-HEAD}
 
-# Makefile 参照
-UTF_SRCS=" .edict2 .emoji .fullname .itaiji.UTF-8 .ivd .L zipcode/SKK-JISYO.zipcode zipcode/SKK-JISYO.office.zipcode "
-
 # デフォルトでチェックするファイル
 # edict2 と ivd は自動更新で大量に出るので除外
 if [ $# -eq 0 ]; then
-  OTHER_SRCS=" .assoc .china_taiwan .edict .geo .hukugougo .itaiji .jinmei .JIS2 .law .lisp .mazegaki .M .ML .okinawa .propernoun .pubdic+ .requested .S .station .wrong.annotated "
-  DEFAULT_SRCS="`echo ' '$UTF_SRCS $OTHER_SRCS | sed 's/ \.\(edict2\|ivd\) / /g' | sed 's/ \./ SKK-JISYO./g'`"
+  SRCS=" .assoc .edict2 .emoji .fullname .geo .hukugougo .itaiji .ivd .jinmei .JIS2 .L .law .lisp .okinawa .propernoun .requested .S .station .wrong.annotated zipcode/SKK-JISYO.zipcode zipcode/SKK-JISYO.office.zipcode "
+  DEFAULT_SRCS="`echo ' '$SRCS | sed 's/ \.\(edict2\|ivd\) / /g' | sed 's/ \./ SKK-JISYO./g'`"
   set $DEFAULT_SRCS
 fi
 
@@ -63,16 +60,10 @@ fi
 IGNORECOMMENTS="-I '^;'"
 
 while [ $# -ne 0 ]; do
-  case $UTF_SRCS in
-    (*" ${1#SKK-JISYO} "*) ENC=utf-8 ;;
-    (**) ENC=euc-jisx0213 ;;
-  esac
-
   OLDLINES=`mktemp`
   NEWLINES=`mktemp`
   ( \
     git diff $IGNORECOMMENTS -U0 $COMPARED -- $1 \
-    | iconv -f $ENC -t utf-8 \
     | sed -e '1,4d' \
     | tee /dev/stderr \
     | sed -e '/^[+@]/d' \
