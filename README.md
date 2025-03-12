@@ -134,7 +134,7 @@ SKK 入力のための基本となる、単独で日本語文の入力が可能�
 ### (3) 特殊変換系
 
   * SKK-JISYO.emoji.gz
-    ^ [./SKK-JISYO.emoji.gz](./SKK-JISYO.emoji.gz)
+    - [./SKK-JISYO.emoji.gz](./SKK-JISYO.emoji.gz)
       [[md5](./SKK-JISYO.emoji.gz.md5)]
     - 「かお」「すまいる」などで絵文字に変換できます。
     - abbrev で face や smile からも変換できます。
@@ -177,7 +177,7 @@ SKK 入力のための基本となる、単独で日本語文の入力が可能�
       [[md5](./SKK-JISYO.itaiji.gz.md5)]
     - 「▽」の挿入による再変換の機構などを利用して、異体字変換を行うための辞書です。
     - 以下の三つのデータから作成されました。
-      - 斉藤寿成氏、大野裕氏の作成された [異體字轉](http://www.eonet.ne.jp/~kotobukispace/ddt/itaizy/itaizy.html)
+      - 斉藤寿成氏、大野裕氏の作成された [異體字轉](http://www.eonet.ne.jp/~kotobukispace/ddt/itaizy/itaizy.html) ([Vector](https://www.vector.co.jp/soft/win95/writing/se094800.html) 参照)
       - もりみつじゅんじ氏の作成による[参照文字リスト(0213)](http://www.jca.apc.org/~earthian/aozora/0213.html)
       - [『史料編纂所データベース異体字同定一覧』（東京大学史料編纂所編）](https://wwwap.hi.u-tokyo.ac.jp/ships/itaiji_list.jsp)
 
