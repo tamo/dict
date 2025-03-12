@@ -1,5 +1,7 @@
 # SKK dictionary files gh-pages
 
+このページの SKK 辞書は lisp 辞書以外すべて UTF-8 です。
+
 ## 0. 各辞書の概略
 
 SKK では個人の環境に応じて、また個人のニーズに応じて様々な辞書が利用できます。
@@ -44,7 +46,7 @@ SKK 入力のための基本となる、単独で日本語文の入力が可能�
   * SKK-JISYO.L+.gz
     - [./SKK-JISYO.L+.gz](./SKK-JISYO.L+.gz)
       [[md5](./SKK-JISYO.L+.gz.md5)]
-    - L 辞書に各種フィルターをかけたものです。
+    - L 辞書に[各種フィルター](https://github.com/tamo/dict/tree/simplify/filters)をかけたものです。痒いところに手が届くような工夫がされています。
 
   * SKK-JISYO.L.unannotated.gz
     - [./SKK-JISYO.L.unannotated.gz](./SKK-JISYO.L.unannotated.gz)
