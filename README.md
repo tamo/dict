@@ -76,14 +76,25 @@ $ mv ../SKK-JISYO.*.gz .
 $ mv ../SKK-JISYO.*.md5 .
 $ mv ../zipdoce.*.gz .
 $ mv ../zipdoce.*.md5 .
-$ git add -u && git commit
+$ git add -u && git commit -m "update"
 $ git push
 ```
 
 
 # JSON 形式の辞書について
 
-辞書データを JSON に変換したテキストファイルです。
-一部の IME では JSON 形式の辞書をサポートしています。
-JSON ファイルを生成するためには `make json` を実行してください。
-このとき、スクリプト実行環境として Deno が必要です。
+辞書データと相互変換が可能な JSON 形式のテキストファイルです。
+変換には Deno が必要です。
+
+JSON から SKK 辞書を作成するコマンドは単純に `make all` です。
+
+しかし通常の SKK 辞書から JSON ファイルを生成するためには
+いったん JSON を rm しなければいけません。
+これは Makefile 内の記述として、JSON が SKK 辞書に依存しておらず、
+ファイルが存在していれば常に最新として扱われるためです。
+
+```
+$ rm json/SKK-JISYO.L.json
+$ make json/SKK-JISYO.L.json
+```
+
