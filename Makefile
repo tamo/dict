@@ -61,8 +61,10 @@ ALL_SRCS  = $(SRCS) $(TARGETS) SKK-JISYO.L.unannotated SKK-JISYO.L+
 clean:
 	$(RM) *.gz* *~ `find . -name '*~'` `find . -name '.*~'` `find . -name '.#*'` \
 	*.unannotated *.tmp *.w *.taciturn \
+	edict2u \
 	SKK-JISYO.L+ SKK-JISYO.total SKK-JISYO.total+zipcode SKK-JISYO.L.header \
 	SKK-JISYO.emoji.en SKK-JISYO.emoji.ja en.xml ja.xml \
+	json/SKK-JISYO.itaiji.UTF-8.json \
 	itaiji_list.* variant0213.* jisx0213misc.zip \
 	emoji-list.txt $(TARGETS)
 
