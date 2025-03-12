@@ -21,7 +21,7 @@ jobs:
     - name: install packages
       run: |
         sudo apt update
-        sudo apt -y install autoconf docdiff emacs nkf libdb-dev
+        sudo apt -y install autoconf docdiff emacs nkf libdb-dev libglib2.0-dev
 
     - name: clone skktools
       uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
     - name: make skktools
       run: |
         cd tools
-        ./configure --enable-maintainer-mode
+        ./configure
         make
         pwd >> $GITHUB_PATH
 
