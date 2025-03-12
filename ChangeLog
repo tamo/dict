@@ -1,5 +1,15 @@
 2025-03-12  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* Makefile: wrong と unannotate の調整。
+	wrong.annotated を wrong にして、unannotate せず使用。
+
+	* SKK-JISYO.{noregist,not_wrong,requested}: UTF-8 化。
+
+	* skk.ex: autom4te.cache を無視。
+	* zipcode: geo も UTF-8 なので nkf は不要。
+
+2025-03-12  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	* Makefile: いろいろ削減し、すべて UTF-8 にする。
 	M, ML, pubdic+, mazegaki, china_taiwan, edict, pinyin を廃止。
 	また itaiji.UTF-8 は itaiji にする。元の itaiji は itaiji.original。

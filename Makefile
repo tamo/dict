@@ -28,7 +28,7 @@ SORT	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-sort
 
 
 SRCS = \
-	SKK-JISYO.wrong.annotated \
+	SKK-JISYO.wrong \
 	SKK-JISYO.requested \
 	SKK-JISYO.lisp \
 	# SKK-JISYO.noregist
@@ -55,12 +55,12 @@ SKK-JISYO.%: json/SKK-JISYO.%.json meta/SKK-JISYO.%.yaml
 	$(DENO) run --allow-read --allow-write --allow-net script/json2txt.ts \
 	-c UTF-8 -i json/$@.json -o $@
 
-ALL_SRCS  = $(SRCS) $(TARGETS) SKK-JISYO.wrong SKK-JISYO.L.unannotated
-# SKK-JISYO.L+ SKK-JISYO.L.taciturn SKK-JISYO.total
+ALL_SRCS  = $(SRCS) $(TARGETS) SKK-JISYO.L.unannotated SKK-JISYO.L+
+# SKK-JISYO.L.taciturn SKK-JISYO.total
 
 clean:
 	$(RM) *.gz* *~ `find . -name '*~'` `find . -name '.*~'` `find . -name '.#*'` \
-	*.unannotated SKK-JISYO.wrong *.tmp *.w *.taciturn \
+	*.unannotated *.tmp *.w *.taciturn \
 	SKK-JISYO.L+ SKK-JISYO.total SKK-JISYO.total+zipcode SKK-JISYO.L.header \
 	SKK-JISYO.emoji.en SKK-JISYO.emoji.ja en.xml ja.xml \
 	itaiji_list.* variant0213.* jisx0213misc.zip \
@@ -68,13 +68,10 @@ clean:
 
 archive: gzip
 
-unannotated: SKK-JISYO.L.unannotated SKK-JISYO.wrong
+unannotated: SKK-JISYO.L.unannotated
 
 SKK-JISYO.L.unannotated: SKK-JISYO.L
 	$(GAWK) -f $(TOOLS_DIR)/unannotation.awk SKK-JISYO.L > SKK-JISYO.L.unannotated
-
-SKK-JISYO.wrong: SKK-JISYO.wrong.annotated
-	$(GAWK) -f $(TOOLS_DIR)/unannotation.awk SKK-JISYO.wrong.annotated > SKK-JISYO.wrong
 
 wrong_check: SKK-JISYO.wrong
 	for file in $(TARGETS) ; do \

@@ -3,7 +3,6 @@
 DENO = @deno@
 GIT = @git@
 MKDIR = @mkdir@
-NKF = @nkf@
 RM = @rm@
 UNZIP = @unzip@
 WGET = @wget@
@@ -75,8 +74,7 @@ diff:
 	  > words.zipcode.diff
 
 geo:
-	$(NKF) -e $(TEMP_GEO) > $(TEMP_GEO).euc
-	$(SKKDIC_EXPR2) $(TEMP_GEO).euc \
+	$(SKKDIC_EXPR2) $(TEMP_GEO) \
 	  - $(srcdir)/../SKK-JISYO.L \
 	  - $(srcdir)/../SKK-JISYO.geo \
 	  > $(srcdir)/../SKK-JISYO.geo.add

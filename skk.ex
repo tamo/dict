@@ -4,6 +4,8 @@ not_used
 *,v
 *.elc
 *.bak
+*.diff
+autom4te.cache
 make.log
 Makefile.in
 README.md
