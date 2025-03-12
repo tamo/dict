@@ -4,3 +4,4 @@ zipcode.*.gz
 zipcode.*.md5
 cldr-common.zip
 IVD_*
+zipcode/autom4te.cache

@@ -1,5 +1,12 @@
 2025-03-13  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* .gitignore: zipcode/autom4te.cache を追加。
+
+	* skk.ex: zipcode.tar.gz に README.md や configure を含め、
+	しかし config.status や config.log は含めないようにする。
+
+2025-03-13  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	*  zipcode/words.zipcode, zipcode/SKK-JISYO.office.zipcode, zipcode/SKK-JISYO.zipcode: 更新。
 
 2025-03-12  Tamotsu Takahashi  <ttakah+github@gmail.com>

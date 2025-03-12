@@ -5,11 +5,7 @@ not_used
 *.elc
 *.bak
 *.diff
+*.log
 autom4te.cache
-make.log
-Makefile.in
-README.md
-ZIPCODE-MK
-configure
-configure.ac
+config.status
 .gitignore
