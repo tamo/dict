@@ -13,18 +13,22 @@ ICONV	  = iconv
 MD5	  = md5
 MV	  = mv -f
 RM	  = /bin/rm -f
-RUBY	  = ruby -I ./filters
 SED	  = sed
 TAR	  = tar
 TOUCH	  = touch
 UNZIP	  = unzip -o
 
-ZIPDIC_DIR  = ./zipcode
+FILTERS	  = ./filters
+RUBY	  = ruby -I "$(FILTERS)"
 
 TOOLS_DIR = ../tools
 COUNT	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-count
 EXPR2	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-expr2
 SORT	  = PATH="$(PATH):$(TOOLS_DIR)" skkdic-sort
+
+ZIPCODE	  = ./zipcode
+AUTOCONF  = autoconf
+CONFIGURE = PATH="$(PATH):$(TOOLS_DIR)" ./configure
 
 
 SRCS = \
@@ -51,6 +55,8 @@ TARGETS = \
 	SKK-JISYO.station \
 	# SKK-JISYO.itaiji.UTF-8
 
+JSONS = $(patsubst %,json/%.json,$(TARGETS))
+
 SKK-JISYO.%: json/SKK-JISYO.%.json meta/SKK-JISYO.%.yaml
 	$(DENO) run --allow-read --allow-write --allow-net script/json2txt.ts \
 	-c UTF-8 -i json/$@.json -o $@
@@ -60,13 +66,12 @@ ALL_SRCS  = $(SRCS) $(TARGETS) SKK-JISYO.L.unannotated SKK-JISYO.L+
 
 clean:
 	$(RM) *.gz* *~ `find . -name '*~'` `find . -name '.*~'` `find . -name '.#*'` \
-	*.unannotated *.tmp *.w *.taciturn \
-	edict2u \
+	$(TARGETS) *.unannotated *.tmp *.w *.taciturn *.add \
 	SKK-JISYO.L+ SKK-JISYO.total SKK-JISYO.total+zipcode SKK-JISYO.L.header \
-	SKK-JISYO.emoji.en SKK-JISYO.emoji.ja en.xml ja.xml \
-	json/SKK-JISYO.itaiji.UTF-8.json \
-	itaiji_list.* variant0213.* jisx0213misc.zip \
-	emoji-list.txt $(TARGETS)
+	edict2u \
+	SKK-JISYO.emoji.en SKK-JISYO.emoji.ja SKK-JISYO.emoji.tmp en.xml ja.xml \
+	json/SKK-JISYO.itaiji.UTF-8.json itaiji_list.* variant0213.* jisx0213misc.zip \
+	$(ZIPCODE)/SKK-JISYO.zipcode $(ZIPCODE)/SKK-JISYO.office.zipcode
 
 archive: gzip
 
@@ -76,7 +81,7 @@ SKK-JISYO.L.unannotated: SKK-JISYO.L
 	$(GAWK) -f $(TOOLS_DIR)/unannotation.awk SKK-JISYO.L > SKK-JISYO.L.unannotated
 
 wrong_check: SKK-JISYO.wrong
-	for file in $(TARGETS) ; do \
+	@for file in $(TARGETS) ; do \
 	    $(EXPR2) $$file - SKK-JISYO.wrong > $$file.tmp ;\
 	    $(EXPR2) $$file - $$file.tmp > $$file.w ;\
 	    $(RM) $$file.tmp ;\
@@ -87,30 +92,37 @@ wrong_check: SKK-JISYO.wrong
 	    fi ;\
 	done
 
-
-gzip: clean $(ALL_SRCS)
+gzip: $(ALL_SRCS) zipcode.tar.gz zipcode.tar.gz.md5
 	for file in $(ALL_SRCS); do \
 	  $(GZIP) -fc $$file >$$file.gz ;\
 	  $(MD5) $$file.gz >$$file.gz.md5; \
 	done
+
+zipcode.tar.gz zipcode.tar.gz.md5: $(ZIPCODE)/SKK-JISYO.zipcode $(ZIPCODE)/SKK-JISYO.office.zipcode
 	$(TAR) cvzpf zipcode.tar.gz --exclude-from=./skk.ex ./zipcode
 	$(MD5) zipcode.tar.gz >zipcode.tar.gz.md5
 
+$(ZIPCODE)/SKK-JISYO.zipcode $(ZIPCODE)/SKK-JISYO.office.zipcode:
+	cd $(ZIPCODE) && \
+	$(AUTOCONF) && \
+	$(CONFIGURE) && \
+	$(MAKE) all test
+
 SKK-JISYO.L+: SKK-JISYO.L SKK-JISYO.L.header
-	$(RUBY) ./filters/conjugation.rb         -Cpox8   SKK-JISYO.L >  SKK-JISYO.tmp
-	$(RUBY) ./filters/asayaKe.rb             -p8      SKK-JISYO.L >> SKK-JISYO.tmp
-	$(RUBY) ./filters/complete-numerative.rb -pU8     SKK-JISYO.L >> SKK-JISYO.tmp
-	$(RUBY) ./filters/abbrev-convert.rb      -K8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
-	$(RUBY) ./filters/abbrev-convert.rb      -w8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/conjugation.rb         -Cpox8   SKK-JISYO.L >  SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/asayaKe.rb             -p8      SKK-JISYO.L >> SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/complete-numerative.rb -pU8     SKK-JISYO.L >> SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/abbrev-convert.rb      -K8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/abbrev-convert.rb      -w8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
 	$(EXPR2) SKK-JISYO.L + SKK-JISYO.tmp | cat SKK-JISYO.L.header - > SKK-JISYO.L+
 	$(RM) SKK-JISYO.tmp
 
 SKK-JISYO.total: SKK-JISYO.L SKK-JISYO.geo SKK-JISYO.station SKK-JISYO.jinmei SKK-JISYO.propernoun SKK-JISYO.fullname SKK-JISYO.law SKK-JISYO.okinawa SKK-JISYO.hukugougo SKK-JISYO.assoc SKK-JISYO.L.header
-	$(RUBY) ./filters/conjugation.rb         -Cpox8   SKK-JISYO.L >  SKK-JISYO.tmp
-	$(RUBY) ./filters/asayaKe.rb             -p8      SKK-JISYO.L >> SKK-JISYO.tmp
-	$(RUBY) ./filters/complete-numerative.rb -pU8     SKK-JISYO.L >> SKK-JISYO.tmp
-	$(RUBY) ./filters/abbrev-convert.rb      -K8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
-	$(RUBY) ./filters/abbrev-convert.rb      -w8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/conjugation.rb         -Cpox8   SKK-JISYO.L >  SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/asayaKe.rb             -p8      SKK-JISYO.L >> SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/complete-numerative.rb -pU8     SKK-JISYO.L >> SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/abbrev-convert.rb      -K8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
+	$(RUBY) $(FILTERS)/abbrev-convert.rb      -w8 -s 2 SKK-JISYO.L >> SKK-JISYO.tmp
 	# order is very important here
 	$(EXPR2) SKK-JISYO.geo + SKK-JISYO.station + SKK-JISYO.jinmei + SKK-JISYO.propernoun + SKK-JISYO.fullname + SKK-JISYO.tmp + SKK-JISYO.law + SKK-JISYO.okinawa + SKK-JISYO.hukugougo + SKK-JISYO.assoc - SKK-JISYO.L > SKK-JISYO.addition
 	# why eliminating SKK-JISYO.L once? -- to not add too noisy
@@ -118,14 +130,14 @@ SKK-JISYO.total: SKK-JISYO.L SKK-JISYO.geo SKK-JISYO.station SKK-JISYO.jinmei SK
 	$(EXPR2) SKK-JISYO.L + SKK-JISYO.addition | cat SKK-JISYO.L.header - > SKK-JISYO.total
 	$(RM) SKK-JISYO.tmp SKK-JISYO.addition
 
-SKK-JISYO.total+zipcode: SKK-JISYO.total $(ZIPDIC_DIR)/SKK-JISYO.zipcode $(ZIPDIC_DIR)/SKK-JISYO.office.zipcode SKK-JISYO.L.header
-	$(EXPR2) SKK-JISYO.total + $(ZIPDIC_DIR)/SKK-JISYO.zipcode + $(ZIPDIC_DIR)/SKK-JISYO.office.zipcode | cat SKK-JISYO.L.header - > SKK-JISYO.total+zipcode
+SKK-JISYO.total+zipcode: SKK-JISYO.total $(ZIPCODE)/SKK-JISYO.zipcode $(ZIPCODE)/SKK-JISYO.office.zipcode SKK-JISYO.L.header
+	$(EXPR2) SKK-JISYO.total + $(ZIPCODE)/SKK-JISYO.zipcode + $(ZIPCODE)/SKK-JISYO.office.zipcode | cat SKK-JISYO.L.header - > SKK-JISYO.total+zipcode
 
 SKK-JISYO.L.taciturn: SKK-JISYO.L SKK-JISYO.L.header
-	$(RUBY) ./filters/annotation-filter.rb -d8 SKK-JISYO.L | $(EXPR2) | cat SKK-JISYO.L.header - > SKK-JISYO.L.taciturn
+	$(RUBY) $(FILTERS)/annotation-filter.rb -d8 SKK-JISYO.L | $(EXPR2) | cat SKK-JISYO.L.header - > SKK-JISYO.L.taciturn
 
 SKK-JISYO.L+.taciturn: SKK-JISYO.L+ SKK-JISYO.L.header
-	$(RUBY) ./filters/annotation-filter.rb -d8 SKK-JISYO.L+ | $(EXPR2) | cat SKK-JISYO.L.header - > SKK-JISYO.L+.taciturn
+	$(RUBY) $(FILTERS)/annotation-filter.rb -d8 SKK-JISYO.L+ | $(EXPR2) | cat SKK-JISYO.L.header - > SKK-JISYO.L+.taciturn
 
 SKK-JISYO.total.taciturn: SKK-JISYO.total SKK-JISYO.L.header
 	$(RUBY) script/annotation-filter.rb -d8 SKK-JISYO.total | $(EXPR2) | cat SKK-JISYO.L.header - > SKK-JISYO.total.taciturn
@@ -185,7 +197,7 @@ SKK-JISYO.emoji.predef: ja.xml
 	touch SKK-JISYO.emoji.predef
 	$(DENO) --allow-read --allow-write script/emoji.ts -x ja.xml \
 	  -o SKK-JISYO.emoji.predef -p SKK-JISYO.emoji.predef \
-	  -i SKK-JISYO.L+ -c EUC-JP
+	  -i SKK-JISYO.L+ -c UTF-8
 
 en.xml: cldr-common.zip
 	$(UNZIP) -p cldr-common.zip "*common/annotations/en.xml" > en.xml
@@ -262,9 +274,8 @@ variant0213.txt: jisx0213misc.zip
 jisx0213misc.zip:
 	$(CURL) -o jisx0213misc.zip $(JISX_URL)
 
+
 # json/%.json が % に依存すると循環するので注意
-JSONS = $(patsubst %,json/%.json,$(TARGETS))
-json: $(JSONS)
 json/%.json:
 	TXT=$(patsubst json/%.json,%,$@) ; \
 	$(DENO) run --allow-read --allow-write --allow-net script/txt2json.ts \

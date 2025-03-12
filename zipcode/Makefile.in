@@ -28,9 +28,10 @@ JIGYOSYO_ZIP=$(temp_dir)/jigyosyo.zip
 KEN_ALL=$(temp_dir)/utf_ken_all.csv
 JIGYOSYO=$(temp_dir)/jigyosyo.csv
 
-all: zipcode office
+all: $(srcdir)/SKK-JISYO.zipcode $(srcdir)/SKK-JISYO.office.zipcode
 
-zipcode:
+zipcode: $(srcdir)/SKK-JISYO.zipcode
+$(srcdir)/SKK-JISYO.zipcode: $(KEN_ALL)
 	$(DENO) run --allow-read --allow-write $(srcdir)/zipcode.ts \
 	  --csv=$(KEN_ALL) --out=$(TEMP_ZIPCODE) \
 	  --header=$(srcdir)/SKK-JISYO.zipcode \
@@ -43,7 +44,8 @@ else
 	  | $(SKKDIC_SORT) >> $(srcdir)/SKK-JISYO.zipcode
 endif
 
-office:
+office: $(srcdir)/SKK-JISYO.office.zipcode
+$(srcdir)/SKK-JISYO.office.zipcode: $(JIGYOSYO)
 	$(DENO) run --allow-read --allow-write $(srcdir)/zipcode.ts \
 	  --csv=$(JIGYOSYO) --office=$(TEMP_OFFICE) \
 	  --header=$(srcdir)/SKK-JISYO.office.zipcode \
@@ -81,18 +83,22 @@ geo:
 
 # For doing everything automatically.
 
-batch-update: fetch extract update
+batch-update: clean-temps update
 
-batch: fetch extract all
+batch: clean-temps all
 
-fetch:
+$(KEN_ALL_ZIP):
 	$(MKDIR) -p $(temp_dir)
-	-$(RM) -f $(KEN_ALL_ZIP) $(JIGYOSYO_ZIP)
 	$(WGET) -O $(KEN_ALL_ZIP) $(SOURCE_KEN_ALL)
+
+$(JIGYOSYO_ZIP):
+	$(MKDIR) -p $(temp_dir)
 	$(WGET) -O $(JIGYOSYO_ZIP) $(SOURCE_JIGYOSYO)
 
-extract:
+$(KEN_ALL): $(KEN_ALL_ZIP)
 	$(UNZIP) -p $(KEN_ALL_ZIP) > $(KEN_ALL)
+
+$(JIGYOSYO): $(JIGYOSYO_ZIP)
 	$(UNZIP) -p $(JIGYOSYO_ZIP) > $(JIGYOSYO)
 
 clean:

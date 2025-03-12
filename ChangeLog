@@ -1,5 +1,14 @@
 2025-03-12  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* Makefile, zipcode/Makefile.in: できるだけダウンロード回数を減らす。
+	make gzip で clean しないとか、依存性をチェックするとか。
+	zipcode は make batch じゃなくて make all なら最低限の回数になるはず。
+
+	* 各種ヘッダ: "coding: utf-8" にし忘れていたものなど更新。
+	不要になったファイルは削除。
+
+2025-03-12  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	* Makefile: wrong と unannotate の調整。
 	wrong.annotated を wrong にして、unannotate せず使用。
 
