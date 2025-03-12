@@ -1,5 +1,11 @@
 2025-03-13  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* README.md: 辞書の公開 URI を tamo.github.io にした。
+	見方によっては fork や乗っ取りのようになるので
+	simplify ブランチではなく別のブランチにしておく。
+
+2025-03-13  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	* README.md: JSON についての説明を更新。
 
 2025-03-13  Tamotsu Takahashi  <ttakah+github@gmail.com>

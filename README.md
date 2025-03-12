@@ -2,7 +2,7 @@
 
 Refer to the following URL for the distribution files.
 
-https://skk-dev.github.io/dict/
+https://tamo.github.io/dict/
 
 
 # 辞書ファイルの編集をお考えの方へ
