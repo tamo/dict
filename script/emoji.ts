@@ -151,7 +151,7 @@ function extractFromXml(xfile: string): Set<cp_text> {
     if (anno["@type"]) return // type="tts" は重複なので不要
     const cp = anno["@cp"] as string // 絵文字
     const texts = anno["#text"] // パイプ区切りの日本語
-    texts.split(/ *\| */).forEach((text, _, all) => {
+    texts.split(/ *[\|｜] */).forEach((text, _, all) => {
       jas.add({ cp, text, all })
     })
   })
