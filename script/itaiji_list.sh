@@ -2,6 +2,7 @@
 # Public domain
 
 while read line; do
+  [ ${#line} -lt 2 ] && continue
   for i in $(seq 1 ${#line}); do
     char="$(echo $line | cut -c $i)"
     others="${line:0:$(($i-1))}${line:$i}"

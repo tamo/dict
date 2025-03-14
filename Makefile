@@ -53,7 +53,7 @@ TARGETS = \
 	SKK-JISYO.okinawa \
 	SKK-JISYO.propernoun \
 	SKK-JISYO.station \
-	# SKK-JISYO.itaiji.original
+	# converted from json
 
 JSONS = $(patsubst %,json/%.json,$(TARGETS))
 
@@ -193,9 +193,7 @@ SKK-JISYO.emoji.ja: ja.xml SKK-JISYO.emoji.predef
 	$(DENO) --allow-read --allow-write script/emoji.ts -x ja.xml \
 	  -o SKK-JISYO.emoji.ja -p SKK-JISYO.emoji.predef
 
-SKK-JISYO.emoji.predef: ja.xml
-	$(MAKE) SKK-JISYO.L+
-	touch SKK-JISYO.emoji.predef
+SKK-JISYO.emoji.predef: ja.xml SKK-JISYO.L+
 	$(DENO) --allow-read --allow-write script/emoji.ts -x ja.xml \
 	  -o SKK-JISYO.emoji.predef -p SKK-JISYO.emoji.predef \
 	  -i SKK-JISYO.L+ -c UTF-8
@@ -247,8 +245,8 @@ IVD_Collections.txt:
 	test -f IVD_Collections.txt || $(CURL) -o IVD_Collections.txt https://unicode.org/ivd/data/$(IVD_VER)/IVD_Collections.txt
 
 
-SKK-JISYO.itaiji: SKK-JISYO.itaiji.original itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213misc.zip
-	$(EXPR2) SKK-JISYO.itaiji.original + itaiji_list.skk + variant0213.txt.skk > SKK-JISYO.itaiji.tmp
+SKK-JISYO.itaiji: itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213misc.zip
+	$(EXPR2) itaiji_list.skk + variant0213.txt.skk > SKK-JISYO.itaiji.tmp
 	head SKK-JISYO.itaiji.tmp # for testing
 	$(DENO) run --allow-read --allow-write --allow-net script/txt2json.ts \
 	-c UTF-8 -m meta/SKK-JISYO.itaiji.yaml -s schema/jisyo.schema.v0.1.0.json \
@@ -259,10 +257,18 @@ SKK-JISYO.itaiji: SKK-JISYO.itaiji.original itaiji_list.skk itaiji_list.html var
 # 史料編纂所データベース異体字同定一覧（東京大学史料編纂所編）
 SHIPS_URL = https://wwwap.hi.u-tokyo.ac.jp/ships/itaiji_list.jsp
 
-itaiji_list.skk: itaiji_list.html
+itaiji_list.skk: itaiji_list.html itaizy-vcom1234.txt
 	tr -d '\t\r\n 　' < itaiji_list.html | \
 	$(SED) -e 's,<TRclass=.><TD>[0-9]*</TD><TD>\(.\)</TD><TD>\([^&]*\)&nbsp\;</TD></TR>,\n\1\2,g' | \
-	sed -e '1d;/^A/,$$d' > itaiji_list.tmp
+	$(SED) -e '1d;/^A/,$$d' >  itaiji_list.tmp
+
+	# 異体字転
+	$(SED) -e 's/ //g' itaizy-vcom1234.txt >> itaiji_list.tmp
+
+	# SKK original
+	echo '憑凭' >> itaiji_list.tmp
+	echo '粧妝' >> itaiji_list.tmp
+
 	head itaiji_list.tmp # for testing
 	./script/itaiji_list.sh < itaiji_list.tmp > itaiji_list.skk
 	head itaiji_list.skk # for testing
