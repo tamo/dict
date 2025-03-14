@@ -53,7 +53,7 @@ TARGETS = \
 	SKK-JISYO.okinawa \
 	SKK-JISYO.propernoun \
 	SKK-JISYO.station \
-	# SKK-JISYO.itaiji.UTF-8
+	# SKK-JISYO.itaiji.original
 
 JSONS = $(patsubst %,json/%.json,$(TARGETS))
 
@@ -70,7 +70,7 @@ clean:
 	SKK-JISYO.L+ SKK-JISYO.total SKK-JISYO.total+zipcode SKK-JISYO.L.header \
 	edict2u \
 	SKK-JISYO.emoji.en SKK-JISYO.emoji.ja SKK-JISYO.emoji.tmp en.xml ja.xml \
-	json/SKK-JISYO.itaiji.UTF-8.json itaiji_list.* variant0213.* jisx0213misc.zip \
+	json/SKK-JISYO.itaiji.json itaiji_list.* variant0213.* jisx0213misc.zip \
 	okinawa.skk okinawa.json okinawa.dic okinawa.zip \
 	$(ZIPCODE)/SKK-JISYO.zipcode $(ZIPCODE)/SKK-JISYO.office.zipcode
 
@@ -248,17 +248,24 @@ IVD_Collections.txt:
 
 
 SKK-JISYO.itaiji: SKK-JISYO.itaiji.original itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213misc.zip
-	$(EXPR2) SKK-JISYO.itaiji.original + itaiji_list.skk + variant0213.txt.skk > SKK-JISYO.itaiji.UTF-8
-	$(RM)   json/SKK-JISYO.itaiji.UTF-8.json
-	$(MAKE) json/SKK-JISYO.itaiji.UTF-8.json
-	$(MAKE)      SKK-JISYO.itaiji.UTF-8
-	$(MV)        SKK-JISYO.itaiji.UTF-8 SKK-JISYO.itaiji
+	$(EXPR2) SKK-JISYO.itaiji.original + itaiji_list.skk + variant0213.txt.skk > SKK-JISYO.itaiji.tmp
+	head SKK-JISYO.itaiji.tmp # for testing
+	$(DENO) run --allow-read --allow-write --allow-net script/txt2json.ts \
+	-c UTF-8 -m meta/SKK-JISYO.itaiji.yaml -s schema/jisyo.schema.v0.1.0.json \
+	-i SKK-JISYO.itaiji.tmp -o json/SKK-JISYO.itaiji.json
+	$(DENO) run --allow-read --allow-write --allow-net script/json2txt.ts \
+	-c UTF-8 -i json/SKK-JISYO.itaiji.json -o $@
 
 # 史料編纂所データベース異体字同定一覧（東京大学史料編纂所編）
 SHIPS_URL = https://wwwap.hi.u-tokyo.ac.jp/ships/itaiji_list.jsp
 
 itaiji_list.skk: itaiji_list.html
-	./script/itaiji_list.sh < itaiji_list.html > itaiji_list.skk
+	tr -d '\t\r\n 　' < itaiji_list.html | \
+	$(SED) -e 's,<TRclass=.><TD>[0-9]*</TD><TD>\(.\)</TD><TD>\([^&]*\)&nbsp\;</TD></TR>,\n\1\2,g' | \
+	sed -e '1d;/^A/,$$d' > itaiji_list.tmp
+	head itaiji_list.tmp # for testing
+	./script/itaiji_list.sh < itaiji_list.tmp > itaiji_list.skk
+	head itaiji_list.skk # for testing
 
 itaiji_list.html:
 	$(CURL) -o itaiji_list.html $(SHIPS_URL)
@@ -268,6 +275,7 @@ JISX_URL = https://www.jca.apc.org/~earthian/aozora/0213/misc0c23.zip
 
 variant0213.txt.skk: variant0213.txt
 	$(ICONV) -f SHIFT_JISX0213 -t UTF-8 variant0213.txt | $(SED) -ne 's/),/\//g;s/^[0-9-]*,(\(.\)/\1 /;s/[0-9-]*,(//gp' > variant0213.txt.skk
+	head variant0213.txt.skk # for testing
 
 variant0213.txt: jisx0213misc.zip
 	$(UNZIP) -p jisx0213misc.zip "variant0213.txt" > variant0213.txt
