@@ -1,3 +1,9 @@
+2025-03-14  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
+	* SKK-JISYO.requested:
+	Remove わがらし /和芥子/和辛子/
+
+
 2025-03-13  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
 	* Makefile, json/SKK-JISYO.okinawa.json, meta/SKK-JISYO.okinawa.yaml, SKK-JISYO.okinawa: 更新
