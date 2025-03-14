@@ -61,7 +61,7 @@ SKK-JISYO.%: json/SKK-JISYO.%.json meta/SKK-JISYO.%.yaml
 	$(DENO) run --allow-read --allow-write --allow-net script/json2txt.ts \
 	-c UTF-8 -i json/$@.json -o $@
 
-ALL_SRCS  = $(SRCS) $(TARGETS) SKK-JISYO.L.unannotated SKK-JISYO.L+
+ALL_SRCS = $(SRCS) $(TARGETS) SKK-JISYO.L.unannotated SKK-JISYO.L+
 # SKK-JISYO.L.taciturn SKK-JISYO.total
 
 clean:
@@ -86,10 +86,11 @@ wrong_check: SKK-JISYO.wrong
 	    $(EXPR2) $$file - SKK-JISYO.wrong > $$file.tmp ;\
 	    $(EXPR2) $$file - $$file.tmp > $$file.w ;\
 	    $(RM) $$file.tmp ;\
-	    $(COUNT) $$file.w | $(GREP) -v ': 0 candidate' | \
-	      $(SED) -e 's/\.w:/:/' -e 's/: \([0-9]+\) /\1 wrong /' ;\
-	    if [ ! -s $$file.w ]; then \
+	    WRONGS=`$(COUNT) $$file.w | $(GREP) -v ': 0 candidate'` ;\
+	    if [ -z "$$WRONGS" ]; then \
 	      $(RM) $$file.w ; \
+	    else \
+	      echo $$WRONGS | $(SED) -e 's/\.w:/:/' -e 's/: \([0-9]+\) /\1 wrong /' ; \
 	    fi ;\
 	done
 
@@ -247,7 +248,6 @@ IVD_Collections.txt:
 
 SKK-JISYO.itaiji: itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213misc.zip
 	$(EXPR2) itaiji_list.skk + variant0213.txt.skk > SKK-JISYO.itaiji.tmp
-	head SKK-JISYO.itaiji.tmp # for testing
 	$(DENO) run --allow-read --allow-write --allow-net script/txt2json.ts \
 	-c UTF-8 -m meta/SKK-JISYO.itaiji.yaml -s schema/jisyo.schema.v0.1.0.json \
 	-i SKK-JISYO.itaiji.tmp -o json/SKK-JISYO.itaiji.json
@@ -270,9 +270,7 @@ itaiji_list.skk: itaiji_list.html itaizy-vcom1234.txt
 	echo '憑凭' >> itaiji_list.tmp
 	echo '粧妝' >> itaiji_list.tmp
 
-	head itaiji_list.tmp # for testing
 	./script/itaiji_list.sh < itaiji_list.tmp > $@
-	head itaiji_list.skk # for testing
 
 itaiji_list.html:
 	$(CURL) -o $@ $(SHIPS_URL)
@@ -284,7 +282,6 @@ variant0213.txt.skk: variant0213.txt
 	$(ICONV) -f SHIFT_JISX0213 -t UTF-8 variant0213.txt | \
 	$(GAWK) -F'[()]' '{for (i=2; i<=NF; i+=2) printf "%s", $$i; printf "\n"}' | \
 	./script/itaiji_list.sh > $@
-	head $@ # for testing
 
 variant0213.txt: jisx0213misc.zip
 	$(UNZIP) -p jisx0213misc.zip $@ > $@
@@ -309,16 +306,15 @@ okinawa.json: okinawa.dic
 	'"description":"","copyright":"","license":"",' \
 	'"okuri_ari":[],' \
 	'"okuri_nasi":[' > okinawa.json
-	grep -v '^#' okinawa.dic | sed 's/# *$$//' | \
-	sed -E 's/\t+/ /g' | \
-	sed -E 's/^([^ ]+) +([^ ]+) +([^ #]+) +# *(.+)$$/{"\1":\[\n{"\2":\["\4‖\3"\]}\]},/' | \
-	sed -E 's/^([^ {]+) +([^ ]+) +# *(.+)$$/{"\1":\[\n{"\2":\["\3"\]}\]},/' | \
-	sed -E 's/^([^ {]+) +([^ ]+) +([^ #/]+) *$$/{"\1":\[\n{"\2":\["‖\3"\]}\]},/' | \
-	sed -E '/":\[$$/s/ヴ/う゛/g' | \
-	sed -E 's/ +/ /g' | \
-	sed -E 's/[-=@]{3,}//' | \
-	sed -E 's/"[-a-z@\/ ]+#?(‖?) */"\1/' >> okinawa.json
-	echo '{"おきなわじしょのひづけ":[{"' `date` '":[]}]}]}' >> okinawa.json
+	$(GREP) -v '^#' okinawa.dic | sed 's/# *$$//' | \
+	$(SED) -E 's/\t+/ /g' | \
+	$(SED) -E 's/^([^ ]+) +([^ ]+) +([^ #]+) +# *(.+)$$/{"\1":\[\n{"\2":\["\4‖\3"\]}\]},/' | \
+	$(SED) -E 's/^([^ {]+) +([^ ]+) +# *(.+)$$/{"\1":\[\n{"\2":\["\3"\]}\]},/' | \
+	$(SED) -E 's/^([^ {]+) +([^ ]+) +([^ #/]+) *$$/{"\1":\[\n{"\2":\["‖\3"\]}\]},/' | \
+	$(SED) -E '/":\[$$/s/ヴ/う゛/g' | \
+	$(SED) -E 's/ +/ /g' | \
+	$(SED) -E 's/[-=@]{3,}//' | \
+	$(SED) -E 's/"[-a-z@\/ ]+#?(‖?) */"\1/' >> okinawa.json
 
 okinawa.dic: okinawa.zip
 	$(UNZIP) -p okinawa.zip "*.dic" > $@
