@@ -1,15 +1,3 @@
-2025-03-14  Tamotsu Takahashi  <ttakah+github@gmail.com>
-
-	* SKK-JISYO.okinawa:
-
-	* zipcode/SKK-JISYO.zipcode:
-
-
-	* zipcode/SKK-JISYO.office.zipcode:
-
-
-2025-03-14  Tamotsu Takahashi  <ttakah+github@gmail.com>
-
 2025-03-13  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
 	* Makefile, json/SKK-JISYO.okinawa.json, meta/SKK-JISYO.okinawa.yaml, SKK-JISYO.okinawa: 更新
