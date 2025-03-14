@@ -6,7 +6,7 @@ CURL      = curl
 DATE	  = date
 DENO	  = deno
 EMACS	  = emacs --batch --directory ./
-GAWK	  = LC_ALL=C gawk
+GAWK	  = LC_ALL=C.UTF-8 gawk
 GREP	  = grep
 GZIP	  = gzip -9
 ICONV	  = iconv
@@ -258,10 +258,10 @@ SKK-JISYO.itaiji: itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213m
 SHIPS_URL = https://wwwap.hi.u-tokyo.ac.jp/ships/itaiji_list.jsp
 
 itaiji_list.skk: itaiji_list.html itaizy-vcom1234.txt
-	tr -d '\r\n' < itaiji_list.html | \
-	$(SED) -e 's/\t 　//g' | \
-	$(SED) -e 's,<TRclass=.><TD>[0-9]*</TD><TD>\(.\)</TD><TD>\([^&]*\)&nbsp\;</TD></TR>,\n\1\2,g' | \
-	$(SED) -e '1d;/^A/,$$d' > itaiji_list.tmp
+	$(GREP) '^\s*<TD' itaiji_list.html | \
+	$(GAWK) -F'[<>]' '{for (i=3; i<=NF; i+=3) printf "%s", $$i}' | \
+	$(SED) -e 's/　//g;s/&nbsp;[0-9]*/\n/g' | \
+	$(SED) -ne '1s/^1//;/^A/q;p' > itaiji_list.tmp
 
 	# 異体字転
 	$(SED) -e 's/ //g' itaizy-vcom1234.txt >> itaiji_list.tmp
@@ -271,24 +271,26 @@ itaiji_list.skk: itaiji_list.html itaizy-vcom1234.txt
 	echo '粧妝' >> itaiji_list.tmp
 
 	head itaiji_list.tmp # for testing
-	./script/itaiji_list.sh < itaiji_list.tmp > itaiji_list.skk
+	./script/itaiji_list.sh < itaiji_list.tmp > $@
 	head itaiji_list.skk # for testing
 
 itaiji_list.html:
-	$(CURL) -o itaiji_list.html $(SHIPS_URL)
+	$(CURL) -o $@ $(SHIPS_URL)
 
 # JISX0213 InfoCenter
 JISX_URL = https://www.jca.apc.org/~earthian/aozora/0213/misc0c23.zip
 
 variant0213.txt.skk: variant0213.txt
-	$(ICONV) -f SHIFT_JISX0213 -t UTF-8 variant0213.txt | $(SED) -ne 's/),/\//g;s/^[0-9-]*,(\(.\)/\1 /;s/[0-9-]*,(//gp' > variant0213.txt.skk
-	head variant0213.txt.skk # for testing
+	$(ICONV) -f SHIFT_JISX0213 -t UTF-8 variant0213.txt | \
+	$(GAWK) -F'[()]' '{for (i=2; i<=NF; i+=2) printf "%s", $$i; printf "\n"}' | \
+	./script/itaiji_list.sh > $@
+	head $@ # for testing
 
 variant0213.txt: jisx0213misc.zip
-	$(UNZIP) -p jisx0213misc.zip "variant0213.txt" > variant0213.txt
+	$(UNZIP) -p jisx0213misc.zip $@ > $@
 
 jisx0213misc.zip:
-	$(CURL) -o jisx0213misc.zip $(JISX_URL)
+	$(CURL) -o $@ $(JISX_URL)
 
 # 沖縄辞書
 ODIC_URL = https://codeload.github.com/makotoga/o-dic/zip/refs/heads/main

@@ -12,9 +12,6 @@ on:
 permissions:
   contents: write
 
-env:
-  LC_CTYPE: ja_JP.UTF-8
-
 jobs:
   build:
 

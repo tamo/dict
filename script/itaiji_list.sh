@@ -2,14 +2,15 @@
 # Public domain
 
 while read line; do
-  [ ${#line} -lt 2 ] && continue
-  for i in $(seq 1 ${#line}); do
-    char="$(echo $line | cut -c $i)"
-    others="${line:0:$(($i-1))}${line:$i}"
+  length=${#line}
+  [ $length -lt 2 ] && continue
+  for i in $(seq 0 $(($length-1))); do
+    char="${line:$i:1}"
+    others="${line:0:$i}${line:$(($i+1))}"
 
     output="$char /"
-    for j in $(seq 1 ${#others}); do
-      output="$output$(echo $others | cut -c $j)/"
+    for j in $(seq 0 $(($length-2))); do
+      output="$output${others:$j:1}/"
     done
     echo "$output"
   done
