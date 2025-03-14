@@ -258,7 +258,8 @@ SKK-JISYO.itaiji: itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213m
 SHIPS_URL = https://wwwap.hi.u-tokyo.ac.jp/ships/itaiji_list.jsp
 
 itaiji_list.skk: itaiji_list.html itaizy-vcom1234.txt
-	tr -d '\t\r\n 　' < itaiji_list.html | \
+	tr -d '\r\n' < itaiji_list.html | \
+	$(SED) -e 's/\t 　//g' | \
 	$(SED) -e 's,<TRclass=.><TD>[0-9]*</TD><TD>\(.\)</TD><TD>\([^&]*\)&nbsp\;</TD></TR>,\n\1\2,g' | \
 	$(SED) -e '1d;/^A/,$$d' > itaiji_list.tmp
 
