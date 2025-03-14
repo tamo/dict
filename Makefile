@@ -71,6 +71,7 @@ clean:
 	edict2u \
 	SKK-JISYO.emoji.en SKK-JISYO.emoji.ja SKK-JISYO.emoji.tmp en.xml ja.xml \
 	json/SKK-JISYO.itaiji.UTF-8.json itaiji_list.* variant0213.* jisx0213misc.zip \
+	okinawa.skk okinawa.json okinawa.dic okinawa.zip \
 	$(ZIPCODE)/SKK-JISYO.zipcode $(ZIPCODE)/SKK-JISYO.office.zipcode
 
 archive: gzip
@@ -273,6 +274,40 @@ variant0213.txt: jisx0213misc.zip
 
 jisx0213misc.zip:
 	$(CURL) -o jisx0213misc.zip $(JISX_URL)
+
+# 沖縄辞書
+ODIC_URL = https://codeload.github.com/makotoga/o-dic/zip/refs/heads/main
+json/SKK-JISYO.okinawa.json: okinawa.skk
+	$(DENO) run --allow-read --allow-write --allow-net script/txt2json.ts \
+	-c UTF-8 -m meta/SKK-JISYO.okinawa.yaml -s schema/jisyo.schema.v0.1.0.json \
+	-i okinawa.skk -o $@
+
+okinawa.skk: okinawa.json
+	$(DENO) run --allow-read --allow-write --allow-net script/json2txt.ts \
+	-c UTF-8 -i okinawa.json -o okinawa.tmp
+	$(EXPR2) okinawa.tmp > $@
+
+okinawa.json: okinawa.dic
+	echo '{"version":"0.1.0",' \
+	'"description":"","copyright":"","license":"",' \
+	'"okuri_ari":[],' \
+	'"okuri_nasi":[' > okinawa.json
+	grep -v '^#' okinawa.dic | sed 's/# *$$//' | \
+	sed -E 's/\t+/ /g' | \
+	sed -E 's/^([^ ]+) +([^ ]+) +([^ #]+) +# *(.+)$$/{"\1":\[\n{"\2":\["\4‖\3"\]}\]},/' | \
+	sed -E 's/^([^ {]+) +([^ ]+) +# *(.+)$$/{"\1":\[\n{"\2":\["\3"\]}\]},/' | \
+	sed -E 's/^([^ {]+) +([^ ]+) +([^ #/]+) *$$/{"\1":\[\n{"\2":\["‖\3"\]}\]},/' | \
+	sed -E '/":\[$$/s/ヴ/う゛/g' | \
+	sed -E 's/ +/ /g' | \
+	sed -E 's/[-=@]{3,}//' | \
+	sed -E 's/"[-a-z@\/ ]+#?(‖?) */"\1/' >> okinawa.json
+	echo '{"おきなわじしょのひづけ":[{"' `date` '":[]}]}]}' >> okinawa.json
+
+okinawa.dic: okinawa.zip
+	$(UNZIP) -p okinawa.zip "*.dic" > $@
+
+okinawa.zip:
+	$(CURL) -o $@ $(ODIC_URL)
 
 
 # json/%.json が % に依存すると循環するので注意

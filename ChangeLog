@@ -1,5 +1,11 @@
 2025-03-13  Tamotsu Takahashi  <ttakah+github@gmail.com>
 
+	* Makefile, json/SKK-JISYO.okinawa.json, meta/SKK-JISYO.okinawa.yaml, SKK-JISYO.okinawa: 更新
+	今後の更新作業は make json/SKK-JISYO.okinawa.json ののち
+	make SKK-JISYO.okinawa とすればいいはず
+
+2025-03-13  Tamotsu Takahashi  <ttakah+github@gmail.com>
+
 	* README.md: 辞書の公開 URI を tamo.github.io にした。
 	見方によっては fork や乗っ取りのようになるので
 	simplify ブランチではなく別のブランチにしておく。
