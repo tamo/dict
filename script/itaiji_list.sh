@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Public domain
 
 tr -d '\t\r\n 　'  | \
