@@ -5,8 +5,7 @@
 CURL      = curl
 DATE	  = date
 DENO	  = deno
-EMACS	  = emacs --batch --directory ./
-GAWK	  = LC_ALL=C.UTF-8 gawk
+GAWK	  = LC_CTYPE=ja_JP.UTF-8 gawk
 GREP	  = grep
 GZIP	  = gzip -9
 ICONV	  = iconv
@@ -234,16 +233,16 @@ edict2u:
 # Unicode Ideographic Variation Database (IVD)
 IVD_VER = 2022-09-13
 
-SKK-JISYO.ivd: IVD_Sequences.txt IVD_Collections.txt
-	$(EMACS) --load ivd.el --funcall make-ivd-jisyo | $(EXPR2) > SKK-JISYO.ivd.tmp
+SKK-JISYO.ivd: IVD_Sequences.txt unicode-license.txt
+	(echo "BEGIN{"; \
+	 sed -nE 's|^([^ ]*) ([^ ]*); ([^;]*); (.*)$$|printf "%c /%c%c;\3(\4)/\\n", 0x\1, 0x\1, 0x\2;|p' IVD_Sequences.txt; \
+	 echo "}") | $(GAWK) -f - | $(EXPR2) > SKK-JISYO.ivd.tmp
 	echo '-*- mode: fundamental; coding: utf-8 -*-' | cat - unicode-license.txt | $(SED) "s/^/;; /g" | cat - SKK-JISYO.ivd.tmp > SKK-JISYO.ivd
 	$(RM) SKK-JISYO.ivd.tmp
 
 IVD_Sequences.txt:
-	test -f IVD_Sequences.txt || $(CURL) -o IVD_Sequences.txt https://unicode.org/ivd/data/$(IVD_VER)/IVD_Sequences.txt
-
-IVD_Collections.txt:
-	test -f IVD_Collections.txt || $(CURL) -o IVD_Collections.txt https://unicode.org/ivd/data/$(IVD_VER)/IVD_Collections.txt
+	$(CURL) https://unicode.org/ivd/data/$(IVD_VER)/IVD_Collections.txt
+	$(CURL) -o $@ https://unicode.org/ivd/data/$(IVD_VER)/IVD_Sequences.txt
 
 
 SKK-JISYO.itaiji: itaiji_list.skk itaiji_list.html variant0213.txt.skk jisx0213misc.zip
@@ -315,6 +314,7 @@ okinawa.json: okinawa.dic
 	$(SED) -E 's/ +/ /g' | \
 	$(SED) -E 's/[-=@]{3,}//' | \
 	$(SED) -E 's/"[-a-z@\/ ]+#?(‖?) */"\1/' >> okinawa.json
+	echo '{"おきなわじしょのひづけ":[{"' `date` '":[]}]}]}' >> okinawa.json
 
 okinawa.dic: okinawa.zip
 	$(UNZIP) -p okinawa.zip "*.dic" > $@
